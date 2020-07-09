@@ -1,32 +1,36 @@
-# imports 2018 NSQIP data, separates into predictors and outcomes, recodes variables
-# output of two elements, pred containing predictors and outcomes containing outcomes
+# This script processes the data from the NSQIP 2018 dataset
+# The NSQIP 2018 dataset must first be aquired prior to running the script. 
+# Working directory must be changed to the location of the data. 
+# After running this script, outcome_grouping_puf18.R can be run to group the outcomes.
+# The output of this file is a two item list with a data table of predictors and one of outcomes
+# Kyle McGraw, July 2019
 
-# rm(list=ls())
 
-library(dplyr)
-library(data.table)
+#### Import Data ####
+# Set to location of data
+setwd("/Users/User/Documents/NSQIP Surgical Data")
+datatrain_puf18 <- read.csv('acs_nsqip_puf18.txt', sep="\t", header = TRUE, stringsAsFactors = FALSE)
 
-setwd("/Users/User/Documents/NSQIP")
-# t_dat16 <- read.csv('acs_nsqip_puf16.txt', sep="\t", header = TRUE, stringsAsFactors = FALSE)
-# datatrain <- read.csv('acs_nsqip_puf17.txt', sep="\t", header = TRUE, stringsAsFactors = FALSE)
-datatrain <- read.csv('acs_nsqip_puf18.txt', sep="\t", header = TRUE, stringsAsFactors = FALSE)
-#l = list(t_dat16, t_dat17, t_dat18)
-# l = list(t_dat17)
-# datatrain <- rbindlist(l,use.names=TRUE, fill=TRUE)
+#### Pre-processing ####
 
-#recode no response and response of no
-datatrain[datatrain == ""] = NA
-datatrain[datatrain == "NULL"] = NA
-datatrain[datatrain == "-99"] = NA
-# datatrain[datatrain == "Unknown"] = NA
-datatrain[datatrain == "No"] = 0
-datatrain[datatrain == "No Complication"] = 0
-#ages larger than 89 recoded as 90
-datatrain[datatrain == "90+"] = 90
+# change missing values to NA
+datatrain_puf18[datatrain_puf18 == ""] = NA
+datatrain_puf18[datatrain_puf18 == "NULL"] = NA
+datatrain_puf18[datatrain_puf18 == "-99"] = NA
+# change answer of No to standard for processing
+datatrain_puf18[datatrain_puf18 == "No"] = 0
+datatrain_puf18[datatrain_puf18 == "NO"] = 0
+datatrain_puf18[datatrain_puf18 == "No Complication"] = 0
+# ages larger than 89 recoded as 90
+datatrain_puf18[datatrain_puf18 == "90+"] = 90
+
+# NAs mostly are not dealt with yet
+# NAs in outcomes variables with days are turned into -99 for outcome grouping
+# for categorical predictors, NAs not put in a category
 
 #### Predictor Processing ####
 
-pred_puf18 <- transmute(datatrain,
+pred_puf18 <- transmute(datatrain_puf18,
                         
                         # Sex
                         female = if_else(SEX == "female", 1, 0, missing=0),
@@ -114,7 +118,7 @@ pred_puf18 <- transmute(datatrain,
                         BMI = round(703*(as.numeric(WEIGHT))/(as.numeric(HEIGHT)^2)),
                         
                         # Diabetes
-                        diabetes_no = if_else(DIABETES == "NO", 1, 0,missing=0),
+                        diabetes_no = if_else(DIABETES == "0", 1, 0,missing=0),
                         diabetes_insulin = if_else(DIABETES == "INSULIN", 1, 0,missing=0),
                         diabetes_noninsulin = if_else(DIABETES == "NON-INSULIN", 1, 0,missing=0),
                         
@@ -123,7 +127,7 @@ pred_puf18 <- transmute(datatrain,
                         smoke_no = if_else(SMOKE == "0", 1, 0,missing=0),
                         
                         # Dyspnea
-                        dyspnea_rest = if_else(DYSPNEA == "AT REST", 1, 0),missing=0,
+                        dyspnea_rest = if_else(DYSPNEA == "AT REST", 1, 0,missing=0),
                         dyspnea_moderate = if_else(DYSPNEA == "MODERATE EXERTION", 1, 0,missing=0),
                         dyspnea_no = if_else(DYSPNEA == "0", 1, 0,missing=0),
                         
@@ -281,7 +285,7 @@ pred_puf18 <- transmute(datatrain,
 
 #### Outcome Processing ####
 
-outcome_puf18 <- transmute(datatrain,
+outcome_puf18 <- transmute(datatrain_puf18,
                            
                            # Discharge Destination
                            discharge_unknown = if_else(DISCHDEST == "Unknown", 1, 0,missing=0),
@@ -292,6 +296,9 @@ outcome_puf18 <- transmute(datatrain,
                            discharge_acute = if_else(DISCHDEST == "Separate Acute Care", 1, 0,missing=0),
                            discharge_rehab = if_else(DISCHDEST == "Rehab", 1, 0,missing=0),
                            discharge_expired = if_else(DISCHDEST == "Expired", 1, 0,missing=0),
+                           discharge_multi = if_else(DISCHDEST == "Multi - level Senior Community", 1, 0,missing=0),
+                           discharge_hospice = if_else(DISCHDEST == "Hospice", 1, 0,missing=0),
+                           discharge_ama = if_else(DISCHDEST == "Against Medical Advice (AMA)", 1, 0,missing=0),
                            
                            # Total operation time
                            optime = as.numeric(OPTIME),
@@ -365,7 +372,7 @@ outcome_puf18 <- transmute(datatrain,
                            # Progressive Renal Insufficiency
                            num_PRF = if_else(is.na(NRENAINSF), 0, as.numeric(NRENAINSF),missing=0),
                            PRF_y = if_else(RENAINSF == "Progressive Renal Insufficiency", 1, 0,missing=0),
-                           PRF_y = if_else(RENAINSF == "0", 1, 0,missing=0),
+                           PRF_n = if_else(RENAINSF == "0", 1, 0,missing=0),
                            days_PRF = if_else(is.na(DRENAINSF), -99, as.numeric(DRENAINSF),missing=0),
                            
                            # Acute Renal Failure
@@ -384,7 +391,7 @@ outcome_puf18 <- transmute(datatrain,
                            
                            # Stroke/Cerebral Vascular Accident
                            num_stroke = if_else(is.na(NCNSCVA), 0, as.numeric(NCNSCVA),missing=0),
-                           cva_neuro_def_y = if_else(CNSCVA == "Yes", 1, 0,missing=0),
+                           cva_neuro_def_y = if_else(CNSCVA == "Stroke/CVA", 1, 0,missing=0),
                            cva_neuro_def_n = if_else(CNSCVA == "0", 1, 0,missing=0),
                            days_stroke = if_else(is.na(DCNSCVA), -99, as.numeric(DCNSCVA),missing=0),
                            
@@ -526,47 +533,8 @@ outcome_puf18 <- transmute(datatrain,
                            days_cdiff = if_else(is.na(DOTHCDIFF), -99, as.numeric(DOTHCDIFF),missing=0),
 )
 
-#### Extra Code ####
-#outcomes: readmission reasons
-# readmit1_related_SSI = if_else(READMSUSPREASON1 == "Superficial Incisional SSI", 1, 0,missing=0),
-# readmit1_related_deep_SSI = if_else(READMSUSPREASON1 == "Deep Incisional SSI", 1, 0,missing=0),
-# readmit1_related_organ_SSI = if_else(READMSUSPREASON1 == "Organ/Space SSI", 1, 0,missing=0),
-# readmit1_related_wound_disruption = if_else(READMSUSPREASON1 == "Wound Disruption", 1, 0,missing=0),
-# readmit1_related_pneumonia = if_else(READMSUSPREASON1 == "Pneumonia", 1, 0,missing=0),
-# readmit1_related_intubation = if_else(READMSUSPREASON1 == "Unplanned Intubation", 1, 0,missing=0),
-# readmit1_related_emb = if_else(READMSUSPREASON1 == "Pulmonary Embolism", 1, 0,missing=0),
-# readmit1_related_vent = if_else(READMSUSPREASON1 == "On Ventilator > 48 hours", 1, 0,missing=0),
-# readmit1_related_prog_renal = if_else(READMSUSPREASON1 == "Progressive Renal Insufficiency", 1, 0,missing=0),
-# readmit1_related_acute_renal = if_else(READMSUSPREASON1 == "Acute Renal Failure", 1, 0,missing=0),
-# readmit1_related_UTI = if_else(READMSUSPREASON1 == "Urinary Tract Infection", 1, 0,missing=0),
-# readmit1_related_CVA = if_else(READMSUSPREASON1 == "CVA", 1, 0,missing=0),
-# readmit1_related_CPR = if_else(READMSUSPREASON1 == "Cardiac Arrest Requiring CPR", 1, 0,missing=0),
-# readmit1_related_MI = if_else(READMSUSPREASON1 == "Myocardial Infarction", 1, 0,missing=0),
-# readmit1_related_transfusion = if_else(READMSUSPREASON1 == "Bleeding Requiring Transfusion (72h of surgery start time)", 1, 0,missing=0),
-# readmit1_related_throm = if_else(READMSUSPREASON1 == "Vein Thrombosis Requiring Therapy", 1, 0,missing=0),
-# readmit1_related_sepsis = if_else(READMSUSPREASON1 == "Sepsis", 1, 0,missing=0),
-# readmit1_related_sepshock = if_else(READMSUSPREASON1 == "Septic Shock", 1, 0,missing=0),
-# readmit1_related_Other_ICD9 = if_else(READMSUSPREASON1 == "Other (list ICD 9 code)", 1, 0,missing=0),
-# readmit1_related_Other_ICD10 = if_else(READMSUSPREASON1 == "Other (list ICD 10 code)", 1, 0,missing=0),
-# readmit1_related_diff = if_else(READMSUSPREASON1 == "C. diff", 1, 0,missing=0),
-# readmit1_unrelated_SSI = if_else(READMUNRELSUSP1 == "Superficial Incisional SSI", 1, 0,missing=0),
-# readmit1_unrelated_deep_SSI = if_else(READMUNRELSUSP1 == "Deep Incisional SSI", 1, 0,missing=0),
-# readmit1_unrelated_organ_SSI = if_else(READMUNRELSUSP1 == "Organ/Space SSI", 1, 0,missing=0),
-# readmit1_unrelated_wound_disruption = if_else(READMUNRELSUSP1 == "Wound Disruption", 1, 0,missing=0),
-# readmit1_unrelated_pneumonia = if_else(READMUNRELSUSP1 == "Pneumonia", 1, 0,missing=0),
-# readmit1_unrelated_intubation = if_else(READMUNRELSUSP1 == "Unplanned Intubation", 1, 0,missing=0),
-# readmit1_unrelated_emb = if_else(READMUNRELSUSP1 == "Pulmonary Embolism", 1, 0,missing=0),
-# readmit1_unrelated_vent = if_else(READMUNRELSUSP1 == "On Ventilator > 48 hours", 1, 0,missing=0),
-# readmit1_unrelated_prog_renal = if_else(READMUNRELSUSP1 == "Progressive Renal Insufficiency", 1, 0,missing=0),
-# readmit1_unrelated_acute_renal = if_else(READMUNRELSUSP1 == "Acute Renal Failure", 1, 0,missing=0),
-# readmit1_unrelated_UTI = if_else(READMUNRELSUSP1 == "Urinary Tract Infection", 1, 0,missing=0),
-# readmit1_unrelated_CVA = if_else(READMUNRELSUSP1 == "CVA", 1, 0,missing=0),
-# readmit1_unrelated_CPR = if_else(READMUNRELSUSP1 == "Cardiac Arrest Requiring CPR", 1, 0,missing=0),
-# readmit1_unrelated_MI = if_else(READMUNRELSUSP1 == "Myocardial Infarction", 1, 0,missing=0),
-# readmit1_unrelated_transfusion = if_else(READMUNRELSUSP1 == "Bleeding Requiring Transfusion (72h of surgery start time)", 1, 0,missing=0),
-# readmit1_unrelated_throm = if_else(READMUNRELSUSP1 == "Vein Thrombosis Requiring Therapy", 1, 0,missing=0),
-# readmit1_unrelated_sepsis = if_else(READMUNRELSUSP1 == "Sepsis", 1, 0,missing=0),
-# readmit1_unrelated_sepshock = if_else(READMUNRELSUSP1 == "Septic Shock", 1, 0,missing=0),
-# readmit1_unrelated_Other_ICD9 = if_else(READMUNRELSUSP1 == "Other (list ICD 9 code)", 1, 0,missing=0),
-# readmit1_unrelated_Other_ICD10 = if_else(READMUNRELSUSP1 == "Other (list ICD 10 code)", 1, 0,missing=0),
-# readmit1_unrelated_diff = if_else(READMUNRELSUSP1 == "C. diff", 1, 0,missing=0),
+
+
+#### Combine ####
+
+data_puf18 <- list(pred_puf18, outcome_puf18)

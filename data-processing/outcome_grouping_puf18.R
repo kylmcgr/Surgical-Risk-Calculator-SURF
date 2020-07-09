@@ -1,12 +1,10 @@
-# Combines outcomes
-# NAs mess things up
+# This script groups outcomes from the NSQIP 2018 dataset
+# data_processing_puf18.R must be run prior to running the script. 
+# data_quality_testing.R should be run prior to outcome grouping.
+# This file edits the second item in the list create by data_processing_puf18.R
+# Kyle McGraw, July 2019
 
-
-setwd("/Users/User/Documents/NSQIP")
-
-source("data_processing_puf16.R")
-
-puf16_outcomes <- transmute(outcome_puf16,
+data_puf18[[2]] <- transmute(data_puf18[[2]],
                             
                             # Discharge Destination
                             y_discharge_home = discharge_home,
@@ -98,9 +96,4 @@ puf16_outcomes <- transmute(outcome_puf16,
 
                             y_any = if_else(y_all > 0, 1, 0),
 )
-
-
-#### Combine ####
-
-data_puf16 <- list(pred_puf16, puf16_outcomes)
 

@@ -1,36 +1,13 @@
-rm(list=ls())
-gc()
+# This script runs some tests on the data from the NSQIP 2018 dataset
+# data_processing_puf18.R must be run prior to running the script. 
+# outcome_grouping_puf18.R should NOT be run prior to running this script.
+# Kyle McGraw, July 2019
 
-setwd("/Users/User/Documents/NSQIP")
 
-source("data_processing_puf16.R")
-# source("data_processing_puf17.R")
-# source("data_processing_puf18.R")
-
-### Simple Models ###
-
-library(aod)
-library(ggplot2)
-male <- data_puf16[[1]]$male
-age <- data_puf16[[1]]$patient_age
-white <- data_puf16[[1]]$race_white
-asian <- data_puf16[[1]]$race_asian
-black <- data_puf16[[1]]$race_black
-nativeam <- data_puf16[[1]]$race_nativeam
-aip <- data_puf16[[1]]$race_aip
-dead <- data_puf16[[2]]$y_dead
-y_dead <- data.frame(male, age, white, asian, black, nativeam, aip, dead)
-is_dead <- glm(dead ~ male + age + asian + white + black + nativeam + aip, data = y_dead, family = "binomial")
-summary(is_dead)
-any <- data_puf16[[2]]$y_any
-y_any <- data.frame(male, age, white, asian, black, nativeam, aip, any)
-any_outcome <- glm(any ~ male + age + asian + white + black + nativeam + aip, data = y_any, family = "binomial")
-summary(any_outcome)
-
-#### Zero Control Tests (Only predictors so far) ####
+#### Zero Control Tests ####
 # testing that each yes/no answer or category sum to 1
 
-y_n_sum_testing <- transmute(data_puf16[[1]],
+pred_sum_testing_puf18 <- transmute(data_puf18[[1]],
                   
                   # Sex
                   sex = female + male,
@@ -124,10 +101,10 @@ y_n_sum_testing <- transmute(data_puf16[[1]],
 
 #### Outcome Processing ####
 
-outcomes <- transmute(datatrain,
+outcome_sum_testing_puf18 <- transmute(data_puf18[[2]],
 
                       # Discharge Destination
-                      discharge = discharge_unknown + discharge_skilled + discharge_unskilled + discharge_facility + discharge_home + discharge_acute + discharge_rehab + discharge_expired,
+                      discharge = discharge_unknown + discharge_skilled + discharge_unskilled + discharge_facility + discharge_home + discharge_acute + discharge_rehab + discharge_expired + discharge_hospice + discharge_multi + discharge_ama,
                       
                       # Superficial Incisional SS
                       sup_ssi = sup_ssi_y + sup_ssi_n,

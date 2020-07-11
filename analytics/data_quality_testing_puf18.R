@@ -3,6 +3,35 @@
 # outcome_grouping_puf18.R should NOT be run prior to running this script.
 # Kyle McGraw, July 2019
 
+library(xtable)
+
+#### Frequency Distributions ####
+# tests that frequency distributions look similar before and after recoding
+
+setwd("/Users/User/Documents/NSQIP Surgical Data")
+pre18 <- read.csv('acs_nsqip_puf18.txt', sep="\t", header = TRUE, stringsAsFactors = FALSE)
+
+for (i in colnames(data_puf18[[1]])){
+  temp <- table(data_puf18[[1]][[i]])
+  if (nrow(temp) < 10) {
+    print(xtable(temp, caption = i, type = "latex"), file = paste("postPredictors18.tex", sep = ""), append = TRUE)
+  }
+}
+for (i in colnames(data_puf18[[2]])){
+  temp <- table(data_puf18[[2]][[i]])
+  if (nrow(temp) < 10) {
+    print(xtable(temp, caption = i, type = "latex"), file = paste("postOutcomes18.tex", sep = ""), append = TRUE)
+  }
+}
+
+
+# Frequencies of predictors and outcomes before recoding
+for (i in colnames(pre18)){
+  temp <- table(pre18[[i]])
+  if (nrow(temp) < 10) {
+    print(xtable(temp, caption = i, type = "latex"), file = paste("pre18.tex", sep = ""), append = TRUE)
+  }
+}
 
 #### Zero Control Tests ####
 # testing that each yes/no answer or category sum to 1

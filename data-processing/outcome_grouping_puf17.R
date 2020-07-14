@@ -4,7 +4,7 @@
 # This file edits the second item in the list create by data_processing_puf17.R
 # Kyle McGraw, July 2019
 
-data_puf17[[2]] <- transmute(data_puf17[[2]],
+grouped_outcomes_puf17 <- transmute(outcomes_puf17,
                             
                             # Discharge Destination
                             y_discharge_home = discharge_home,
@@ -88,11 +88,11 @@ data_puf17[[2]] <- transmute(data_puf17[[2]],
                             y_sepshock = if_else(sepshock_y == 1 | sepshock_patos_y == 1 | num_sepshock >= 1 | days_sepshock >= 0, 1, 0),
                             
                             #  Clostridium Difficile (C.diff) Colitis
-                            y_thromb = if_else(cdiff_y == 1 | num_cdiff >= 1 | days_cdiff >= 0, 1, 0),
+                            y_cdiff = if_else(cdiff_y == 1 | num_cdiff >= 1 | days_cdiff >= 0, 1, 0),
                             
                             # Sum of Outcomes (not including readmission and above)
                             y_all = y_sup_ssi + y_deep_ssi + y_organ_ssi + y_wound_disruption + y_pneumonia + y_unplanned_intubation + y_emb +
-                              y_vent + y_PRF + y_ARF + y_uti + y_stroke + y_cpr + y_mi + y_trans + y_thromb + y_sepsis + y_sepshock + y_thromb,
+                              y_vent + y_PRF + y_ARF + y_uti + y_stroke + y_cpr + y_mi + y_trans + y_thromb + y_sepsis + y_sepshock + y_cdiff,
 
                             y_any = if_else(y_all > 0, 1, 0),
 )

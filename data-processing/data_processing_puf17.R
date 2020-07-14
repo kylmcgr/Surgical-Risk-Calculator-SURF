@@ -8,8 +8,7 @@
 
 #### Import Data ####
 # Set to location of data
-setwd("/Users/User/Documents/NSQIP Surgical Data")
-datatrain_puf17 <- read.csv('acs_nsqip_puf17.txt', sep="\t", header = TRUE, stringsAsFactors = FALSE)
+datatrain_puf17 <- read.csv('/Users/User/Documents/NSQIP Surgical Data/acs_nsqip_puf17.txt', sep="\t", header = TRUE, stringsAsFactors = FALSE)
 
 #### Pre-processing ####
 
@@ -285,7 +284,7 @@ pred_puf17 <- transmute(datatrain_puf17,
 
 #### Outcome Processing ####
 
-outcome_puf17 <- transmute(datatrain_puf17,
+outcomes_puf17 <- transmute(datatrain_puf17,
                            
                            # Discharge Destination
                            discharge_unknown = if_else(DISCHDEST == "Unknown", 1, 0,missing=0),
@@ -532,8 +531,8 @@ outcome_puf17 <- transmute(datatrain_puf17,
                            days_cdiff = if_else(is.na(DOTHCDIFF), -99, as.numeric(DOTHCDIFF),missing=0),
 )
 
-
-
-#### Combine ####
-
-data_puf17 <- list(pred_puf17, outcome_puf17)
+# 
+# 
+# #### Combine ####
+# 
+# data_puf17 <- list(pred_puf17, outcomes_puf17)

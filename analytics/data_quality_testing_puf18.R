@@ -8,19 +8,18 @@ library(xtable)
 #### Frequency Distributions ####
 # tests that frequency distributions look similar before and after recoding
 
-setwd("/Users/User/Documents/NSQIP Surgical Data")
-pre18 <- read.csv('acs_nsqip_puf18.txt', sep="\t", header = TRUE, stringsAsFactors = FALSE)
+pre18 <- read.csv('/Users/User/Documents/NSQIP Surgical Data/acs_nsqip_puf18.txt', sep="\t", header = TRUE, stringsAsFactors = FALSE)
 
-for (i in colnames(data_puf18[[1]])){
-  temp <- table(data_puf18[[1]][[i]])
+for (i in colnames(pred_puf18)){
+  temp <- table(pred_puf18[[i]])
   if (nrow(temp) < 10) {
-    print(xtable(temp, caption = i, type = "latex"), file = paste("postPredictors18.tex", sep = ""), append = TRUE)
+    print(xtable(temp, caption = i, type = "latex"), file = paste("/Users/User/Documents/NSQIP Surgical Data/postPredictors18.tex", sep = ""), append = TRUE)
   }
 }
-for (i in colnames(data_puf18[[2]])){
-  temp <- table(data_puf18[[2]][[i]])
+for (i in colnames(outcomes_puf18)){
+  temp <- table(outcomes_puf18[[i]])
   if (nrow(temp) < 10) {
-    print(xtable(temp, caption = i, type = "latex"), file = paste("postOutcomes18.tex", sep = ""), append = TRUE)
+    print(xtable(temp, caption = i, type = "latex"), file = paste("/Users/User/Documents/NSQIP Surgical Data/postOutcomes18.tex", sep = ""), append = TRUE)
   }
 }
 
@@ -29,14 +28,14 @@ for (i in colnames(data_puf18[[2]])){
 for (i in colnames(pre18)){
   temp <- table(pre18[[i]])
   if (nrow(temp) < 10) {
-    print(xtable(temp, caption = i, type = "latex"), file = paste("pre18.tex", sep = ""), append = TRUE)
+    print(xtable(temp, caption = i, type = "latex"), file = paste("/Users/User/Documents/NSQIP Surgical Data/pre18.tex", sep = ""), append = TRUE)
   }
 }
 
 #### Zero Control Tests ####
 # testing that each yes/no answer or category sum to 1
 
-pred_sum_testing_puf18 <- transmute(data_puf18[[1]],
+pred_sum_testing_puf18 <- transmute(pred_puf18,
                   
                   # Sex
                   sex = female + male,
@@ -130,7 +129,7 @@ pred_sum_testing_puf18 <- transmute(data_puf18[[1]],
 
 #### Outcome Processing ####
 
-outcome_sum_testing_puf18 <- transmute(data_puf18[[2]],
+outcome_sum_testing_puf18 <- transmute(outcomes_puf18,
 
                       # Discharge Destination
                       discharge = discharge_unknown + discharge_skilled + discharge_unskilled + discharge_facility + discharge_home + discharge_acute + discharge_rehab + discharge_expired + discharge_hospice + discharge_multi + discharge_ama,

@@ -300,9 +300,9 @@ outcomes_puf16 <- transmute(datatrain_puf16,
                            optime = as.numeric(OPTIME),
                            # optime = if_else(is.na(OPTIME), -99, as.numeric(OPTIME),missing=0),
                            # Hospital discharge Year
-                           dicharge_year = if_else(is.na(HDISDT), -99, as.numeric(HDISDT),missing=0),
+                           dicharge_year = if_else(is.na(HDISDT), 0, as.numeric(HDISDT),missing=0),
                            # Year of death
-                           death_year = if_else(is.na(YRDEATH), -99, as.numeric(YRDEATH),missing=0),
+                           death_year = if_else(is.na(YRDEATH), 0, as.numeric(YRDEATH),missing=0),
                            # Length of total hospital stay 
                            total_hosp_stay = as.numeric(TOTHLOS),
                            # total_hosp_stay = if_else(is.na(TOTHLOS), -99, as.numeric(TOTHLOS),missing=0),

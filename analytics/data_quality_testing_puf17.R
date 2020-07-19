@@ -17,13 +17,31 @@ file.create("/Users/User/Documents/NSQIP Surgical Data/acs_nsqip_puf17.txt")
 for (i in colnames(pred_puf17)){
   temp <- table(pred_puf17[[i]])
   if (nrow(temp) < 10) {
-    print(xtable(temp, caption = i, type = "latex"), file = paste("/Users/User/Documents/NSQIP Surgical Data/postPredictors17.tex", sep = ""), append = TRUE)
+    # Get latex code of table without printing to console
+    temp_table <- capture.output(print(xtable(temp, caption = i, type = "latex")))
+    
+    # Edits the latex code to import nicely into latex
+    temp_table <- gsub("\\\\begin\\{table\\}\\[ht\\]", "\\\\bigskip\\\\bigskip", temp_table)
+    temp_table <- gsub("\\\\end\\{table\\}", "", temp_table)
+    temp_table <- gsub("\\\\caption\\{", "\\\\captionof\\{table\\}\\{", temp_table)
+    
+    # Append to file
+    write(temp_table, file = paste("/Users/User/Documents/NSQIP Surgical Data/postPredictors17.tex", sep = ""), append = TRUE)
   }
 }
 for (i in colnames(outcomes_puf17)){
   temp <- table(outcomes_puf17[[i]])
   if (nrow(temp) < 10) {
-    print(xtable(temp, caption = i, type = "latex"), file = paste("/Users/User/Documents/NSQIP Surgical Data/postOutcomes17.tex", sep = ""), append = TRUE)
+    # Get latex code of table without printing to console
+    temp_table <- capture.output(print(xtable(temp, caption = i, type = "latex")))
+    
+    # Edits the latex code to import nicely into latex
+    temp_table <- gsub("\\\\begin\\{table\\}\\[ht\\]", "\\\\bigskip\\\\bigskip", temp_table)
+    temp_table <- gsub("\\\\end\\{table\\}", "", temp_table)
+    temp_table <- gsub("\\\\caption\\{", "\\\\captionof\\{table\\}\\{", temp_table)
+    
+    # Append to file
+    write(temp_table, file = paste("/Users/User/Documents/NSQIP Surgical Data/postOutcomes17.tex", sep = ""), append = TRUE)
   }
 }
 
@@ -35,7 +53,16 @@ pre17 <- read.csv('/Users/User/Documents/NSQIP Surgical Data/acs_nsqip_puf17.txt
 for (i in colnames(pre17)){
   temp <- table(pre17[[i]])
   if (nrow(temp) < 10) {
-    print(xtable(temp, caption = i, type = "latex"), file = paste("/Users/User/Documents/NSQIP Surgical Data/pre17.tex", sep = ""), append = TRUE)
+    # Get latex code of table without printing to console
+    temp_table <- capture.output(print(xtable(temp, caption = i, type = "latex")))
+    
+    # Edits the latex code to import nicely into latex
+    temp_table <- gsub("\\\\begin\\{table\\}\\[ht\\]", "\\\\bigskip\\\\bigskip", temp_table)
+    temp_table <- gsub("\\\\end\\{table\\}", "", temp_table)
+    temp_table <- gsub("\\\\caption\\{", "\\\\captionof\\{table\\}\\{", temp_table)
+    
+    # Append to file
+    write(temp_table, file = paste("/Users/User/Documents/NSQIP Surgical Data/pre17.tex", sep = ""), append = TRUE)
   }
 }
 

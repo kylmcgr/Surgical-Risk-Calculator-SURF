@@ -8,8 +8,12 @@ library(xtable)
 #### Frequency Distributions ####
 # tests that frequency distributions look similar before and after recoding
 
-pre17 <- read.csv('/Users/User/Documents/NSQIP Surgical Data/acs_nsqip_puf17.txt', sep="\t", header = TRUE, stringsAsFactors = FALSE)
+# Creates new empty file for all three sets of tables
+file.create("/Users/User/Documents/NSQIP Surgical Data/postPredictors17.tex")
+file.create("/Users/User/Documents/NSQIP Surgical Data/postOutcomes17.tex")
+file.create("/Users/User/Documents/NSQIP Surgical Data/acs_nsqip_puf17.txt")
 
+# Appends each variable to file as an additional table
 for (i in colnames(pred_puf17)){
   temp <- table(pred_puf17[[i]])
   if (nrow(temp) < 10) {
@@ -22,6 +26,9 @@ for (i in colnames(outcomes_puf17)){
     print(xtable(temp, caption = i, type = "latex"), file = paste("/Users/User/Documents/NSQIP Surgical Data/postOutcomes17.tex", sep = ""), append = TRUE)
   }
 }
+
+# Import data pre-recoding
+pre17 <- read.csv('/Users/User/Documents/NSQIP Surgical Data/acs_nsqip_puf17.txt', sep="\t", header = TRUE, stringsAsFactors = FALSE)
 
 
 # Frequencies of predictors and outcomes before recoding

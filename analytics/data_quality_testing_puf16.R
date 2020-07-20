@@ -1,6 +1,7 @@
 # This script runs some tests on the data from the NSQIP 2016 dataset
 # data_processing_puf16.R must be run prior to running the script for the pred_puf16 and outcomes_puf16 objects.
 # The path to the location of the data should be updated to the location of the file.
+# The path to the location of the exported files should also be updated.
 # Kyle McGraw, July 2019
 
 
@@ -32,7 +33,7 @@ for (i in colnames(pred_puf16)){
     temp_table <- gsub("\\\\caption\\{", "\\\\captionof\\{table\\}\\{", temp_table)
     temp_table <- gsub("_", "-", temp_table)
     
-    # Append to file
+    # Append to file, change path if needed
     write(temp_table, file = paste("/Users/User/Documents/NSQIP Surgical Data/postPredictors16.tex", sep = ""), append = TRUE)
   }
 }
@@ -51,7 +52,7 @@ for (i in colnames(outcomes_puf16)){
     temp_table <- gsub("\\\\caption\\{", "\\\\captionof\\{table\\}\\{", temp_table)
     temp_table <- gsub("_", "-", temp_table)
     
-    # Append to file
+    # Append to file, change path if needed
     write(temp_table, file = paste("/Users/User/Documents/NSQIP Surgical Data/postOutcomes16.tex", sep = ""), append = TRUE)
   }
 }
@@ -70,7 +71,7 @@ for (i in colnames(pre16)){
     temp_table <- gsub("\\\\caption\\{", "\\\\captionof\\{table\\}\\{", temp_table)
     temp_table <- gsub("_", "-", temp_table)
     
-    # Append to file
+    # Append to file, change path if needed
     write(temp_table, file = paste("/Users/User/Documents/NSQIP Surgical Data/pre16.tex", sep = ""), append = TRUE)
   }
 }

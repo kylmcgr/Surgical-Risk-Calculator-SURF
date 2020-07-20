@@ -1,4 +1,4 @@
-# This script processes the data from the NSQIP 2017 data set
+# This script processes the data from the NSQIP 2017 dataset
 # The NSQIP 2017 data set must first be acquired prior to running the script. 
 # The path to the location of the data should be updated to the location of the file.
 # The output of this file is pred_puf17 (a data table of predictors) and outcomes_puf17 (a data table of outcomes).

@@ -3,6 +3,7 @@ gc()
 
 library(dplyr)
 library(data.table)
+library(xtable)
 
 setwd("/Users/User/OneDrive - California Institute of Technology/Caltech/Frosh/SURF/Surgery SURF/Surgical Risk Calculator SURF")
 

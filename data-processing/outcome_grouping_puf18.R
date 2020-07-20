@@ -1,9 +1,9 @@
 # This script groups outcomes from the NSQIP 2018 dataset
-# data_processing_puf18.R must be run prior to running the script. 
-# data_quality_testing.R should be run prior to outcome grouping.
-# This file edits the second item in the list create by data_processing_puf18.R
+# data_processing_puf18.R must be run prior to running the script to generate the outcomes_puf18 object.
 # Kyle McGraw, July 2019
 
+
+# Groups outcomes
 grouped_outcomes_puf18 <- transmute(outcomes_puf18,
                             
                             # Discharge Destination

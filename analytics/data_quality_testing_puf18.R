@@ -1,22 +1,28 @@
 # This script runs some tests on the data from the NSQIP 2018 dataset
-# data_processing_puf18.R must be run prior to running the script. 
-# outcome_grouping_puf18.R should NOT be run prior to running this script.
+# data_processing_puf18.R must be run prior to running the script for the pred_puf18 and outcomes_puf18 objects.
+# The path to the location of the data should be updated to the location of the file.
 # Kyle McGraw, July 2019
 
-library(xtable)
+
+### Import Unchanged Data ###
+# Set to location of data
+pre18 <- read.csv('/Users/User/Documents/NSQIP Surgical Data/acs_nsqip_puf18.txt', sep="\t", header = TRUE, stringsAsFactors = FALSE)
+
 
 #### Frequency Distributions ####
-# tests that frequency distributions look similar before and after recoding
+# Generated latex tables to check that frequencies are similar before and after recoding
+# Only uses categories that have less than 15 options to only include multiple choice categories
 
 # Creates new empty file for all three sets of tables
 file.create("/Users/User/Documents/NSQIP Surgical Data/postPredictors18.tex")
 file.create("/Users/User/Documents/NSQIP Surgical Data/postOutcomes18.tex")
-file.create("/Users/User/Documents/NSQIP Surgical Data/acs_nsqip_puf18.txt")
+file.create("/Users/User/Documents/NSQIP Surgical Data/pre18.tex")
 
+# Recoded predictors
 # Appends each variable to file as an additional table
 for (i in colnames(pred_puf18)){
   temp <- table(pred_puf18[[i]])
-  if (nrow(temp) < 10) {
+  if (nrow(temp) < 15) {
     # Get latex code of table without printing to console
     temp_table <- capture.output(print(xtable(temp, caption = i, type = "latex")))
     
@@ -24,14 +30,18 @@ for (i in colnames(pred_puf18)){
     temp_table <- gsub("\\\\begin\\{table\\}\\[ht\\]", "\\\\bigskip\\\\bigskip", temp_table)
     temp_table <- gsub("\\\\end\\{table\\}", "", temp_table)
     temp_table <- gsub("\\\\caption\\{", "\\\\captionof\\{table\\}\\{", temp_table)
+    temp_table <- gsub("_", "-", temp_table)
     
     # Append to file
     write(temp_table, file = paste("/Users/User/Documents/NSQIP Surgical Data/postPredictors18.tex", sep = ""), append = TRUE)
   }
 }
+
+# Recoded outcomes
+# Appends each variable to file as an additional table
 for (i in colnames(outcomes_puf18)){
   temp <- table(outcomes_puf18[[i]])
-  if (nrow(temp) < 10) {
+  if (nrow(temp) < 15) {
     # Get latex code of table without printing to console
     temp_table <- capture.output(print(xtable(temp, caption = i, type = "latex")))
     
@@ -39,20 +49,18 @@ for (i in colnames(outcomes_puf18)){
     temp_table <- gsub("\\\\begin\\{table\\}\\[ht\\]", "\\\\bigskip\\\\bigskip", temp_table)
     temp_table <- gsub("\\\\end\\{table\\}", "", temp_table)
     temp_table <- gsub("\\\\caption\\{", "\\\\captionof\\{table\\}\\{", temp_table)
+    temp_table <- gsub("_", "-", temp_table)
     
     # Append to file
     write(temp_table, file = paste("/Users/User/Documents/NSQIP Surgical Data/postOutcomes18.tex", sep = ""), append = TRUE)
   }
 }
 
-# Import data pre-recoding
-pre18 <- read.csv('/Users/User/Documents/NSQIP Surgical Data/acs_nsqip_puf18.txt', sep="\t", header = TRUE, stringsAsFactors = FALSE)
-
-
-# Frequencies of predictors and outcomes before recoding
+# Predictors and outcomes before recoding
+# Appends each variable to file as an additional table
 for (i in colnames(pre18)){
   temp <- table(pre18[[i]])
-  if (nrow(temp) < 10) {
+  if (nrow(temp) < 15) {
     # Get latex code of table without printing to console
     temp_table <- capture.output(print(xtable(temp, caption = i, type = "latex")))
     
@@ -60,15 +68,18 @@ for (i in colnames(pre18)){
     temp_table <- gsub("\\\\begin\\{table\\}\\[ht\\]", "\\\\bigskip\\\\bigskip", temp_table)
     temp_table <- gsub("\\\\end\\{table\\}", "", temp_table)
     temp_table <- gsub("\\\\caption\\{", "\\\\captionof\\{table\\}\\{", temp_table)
+    temp_table <- gsub("_", "-", temp_table)
     
     # Append to file
     write(temp_table, file = paste("/Users/User/Documents/NSQIP Surgical Data/pre18.tex", sep = ""), append = TRUE)
   }
 }
 
+
 #### Zero Control Tests ####
 # testing that each yes/no answer or category sum to 1
 
+# Recodes each predictor category as sum of different options
 pred_sum_testing_puf18 <- transmute(pred_puf18,
                   
                   # Sex
@@ -161,8 +172,7 @@ pred_sum_testing_puf18 <- transmute(pred_puf18,
                   ASA = ASA_no + ASA_mild + ASA_severe + ASA_life + ASA_moribund + ASA_none,
 )
 
-#### Outcome Processing ####
-
+# Recodes each outcome category as sum of different options
 outcome_sum_testing_puf18 <- transmute(outcomes_puf18,
 
                       # Discharge Destination

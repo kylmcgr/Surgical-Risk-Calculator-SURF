@@ -1,14 +1,15 @@
-# This script processes the data from the NSQIP 2018 dataset
-# The NSQIP 2018 dataset must first be aquired prior to running the script. 
-# Working directory must be changed to the location of the data. 
-# After running this script, outcome_grouping_puf18.R can be run to group the outcomes.
-# The output of this file is a two item list with a data table of predictors and one of outcomes
+# This script processes the data from the NSQIP 2018 data set
+# The NSQIP 2018 data set must first be acquired prior to running the script. 
+# The path to the location of the data should be updated to the location of the file.
+# The output of this file is pred_puf18 (a data table of predictors) and outcomes_puf18 (a data table of outcomes).
 # Kyle McGraw, July 2019
 
 
 #### Import Data ####
+
 # Set to location of data
 datatrain_puf18 <- read.csv('/Users/User/Documents/NSQIP Surgical Data/acs_nsqip_puf18.txt', sep="\t", header = TRUE, stringsAsFactors = FALSE)
+
 
 #### Pre-processing ####
 
@@ -16,18 +17,20 @@ datatrain_puf18 <- read.csv('/Users/User/Documents/NSQIP Surgical Data/acs_nsqip
 datatrain_puf18[datatrain_puf18 == ""] = NA
 datatrain_puf18[datatrain_puf18 == "NULL"] = NA
 datatrain_puf18[datatrain_puf18 == "-99"] = NA
+
 # change answer of No to standard for processing
 datatrain_puf18[datatrain_puf18 == "No"] = 0
 datatrain_puf18[datatrain_puf18 == "NO"] = 0
 datatrain_puf18[datatrain_puf18 == "No Complication"] = 0
+
 # ages larger than 89 recoded as 90
 datatrain_puf18[datatrain_puf18 == "90+"] = 90
 
-# NAs mostly are not dealt with yet
-# NAs in outcomes variables with days are turned into -99 for outcome grouping
-# for categorical predictors, NAs not put in a category
 
 #### Predictor Processing ####
+# Many NAs are not dealt with yet
+# NAs in outcomes variables with days are turned into -99 for outcome grouping
+# for categorical predictors, NAs not put in a category
 
 pred_puf18 <- transmute(datatrain_puf18,
                         
@@ -282,7 +285,11 @@ pred_puf18 <- transmute(datatrain_puf18,
                         
 )
 
+
 #### Outcome Processing ####
+# Many NAs are not dealt with yet
+# NAs in outcomes variables with days are turned into -99 for outcome grouping
+# for categorical predictors, NAs not put in a category
 
 outcomes_puf18 <- transmute(datatrain_puf18,
                            
@@ -531,9 +538,3 @@ outcomes_puf18 <- transmute(datatrain_puf18,
                            num_cdiff = if_else(is.na(NOTHCDIFF), 0, as.numeric(NOTHCDIFF),missing=0),
                            days_cdiff = if_else(is.na(DOTHCDIFF), -99, as.numeric(DOTHCDIFF),missing=0),
 )
-# 
-# 
-# 
-# #### Combine ####
-# 
-# data_puf18 <- list(pred_puf18, outcomes_puf18)

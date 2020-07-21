@@ -13,6 +13,7 @@ library(data.table)
 library(xtable)
 library(aod)
 library(ggplot2)
+library(lme4)
 
 # Sets working directory
 setwd("/Users/User/OneDrive - California Institute of Technology/Caltech/Frosh/SURF/Surgery SURF/Surgical Risk Calculator SURF")

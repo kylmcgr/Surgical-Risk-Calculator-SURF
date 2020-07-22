@@ -1,13 +1,17 @@
 # This script runs some tests on the data from the NSQIP 2016 dataset
 # data_processing_puf16.R must be run prior to running the script for the pred_puf16 and outcomes_puf16 objects.
-# The path to the location of the data should be updated to the location of the file.
-# The path to the location of the exported files should also be updated.
+# The working directory should be set to the location of the data prior to running the script.
+# This file generates latex code for tables of variables pre and post processing:
+# postPredictors16.tex, postOutcomes16.tex, pre16.tex
+# This file generates two data tables for zero control tests:
+# pred_sum_testing_puf16, outcome_sum_testing_puf16
 # Kyle McGraw, July 2019
 
 
-### Import Unchanged Data ###
-# Set to location of data
-pre16 <- read.csv('/Users/User/Documents/NSQIP Surgical Data/acs_nsqip_puf16.txt', sep="\t", header = TRUE, stringsAsFactors = FALSE)
+### Import Data ###
+pred_puf16 <- read.csv('pred_puf16.csv')
+outcomes_puf16 <- read.csv('outcomes_puf16.csv')
+pre16 <- read.csv('acs_nsqip_puf16.txt', sep="\t", header = TRUE, stringsAsFactors = FALSE)
 
 
 #### Frequency Distributions ####
@@ -15,9 +19,9 @@ pre16 <- read.csv('/Users/User/Documents/NSQIP Surgical Data/acs_nsqip_puf16.txt
 # Only uses categories that have less than 15 options to only include multiple choice categories
 
 # Creates new empty file for all three sets of tables
-file.create("/Users/User/Documents/NSQIP Surgical Data/postPredictors16.tex")
-file.create("/Users/User/Documents/NSQIP Surgical Data/postOutcomes16.tex")
-file.create("/Users/User/Documents/NSQIP Surgical Data/pre16.tex")
+file.create("postPredictors16.tex")
+file.create("postOutcomes16.tex")
+file.create("pre16.tex")
 
 # Recoded predictors
 # Appends each variable to file as an additional table
@@ -33,8 +37,8 @@ for (i in colnames(pred_puf16)){
     temp_table <- gsub("\\\\caption\\{", "\\\\captionof\\{table\\}\\{", temp_table)
     temp_table <- gsub("_", "-", temp_table)
     
-    # Append to file, change path if needed
-    write(temp_table, file = paste("/Users/User/Documents/NSQIP Surgical Data/postPredictors16.tex", sep = ""), append = TRUE)
+    # Append latex code to file
+    write(temp_table, file = paste("Latex Code/postPredictors16.tex", sep = ""), append = TRUE)
   }
 }
 
@@ -52,8 +56,8 @@ for (i in colnames(outcomes_puf16)){
     temp_table <- gsub("\\\\caption\\{", "\\\\captionof\\{table\\}\\{", temp_table)
     temp_table <- gsub("_", "-", temp_table)
     
-    # Append to file, change path if needed
-    write(temp_table, file = paste("/Users/User/Documents/NSQIP Surgical Data/postOutcomes16.tex", sep = ""), append = TRUE)
+    # Append latex code to file
+    write(temp_table, file = paste("Latex Code/postOutcomes16.tex", sep = ""), append = TRUE)
   }
 }
 
@@ -71,8 +75,8 @@ for (i in colnames(pre16)){
     temp_table <- gsub("\\\\caption\\{", "\\\\captionof\\{table\\}\\{", temp_table)
     temp_table <- gsub("_", "-", temp_table)
     
-    # Append to file, change path if needed
-    write(temp_table, file = paste("/Users/User/Documents/NSQIP Surgical Data/pre16.tex", sep = ""), append = TRUE)
+    # Append latex code to file
+    write(temp_table, file = paste("Latex Code/pre16.tex", sep = ""), append = TRUE)
   }
 }
 
@@ -283,3 +287,8 @@ outcome_sum_testing_puf16 <- transmute(outcomes_puf16,
                       #  Clostridium Difficile (C.diff) Colitis
                       cdiff = cdiff_y + cdiff_n,
 )
+
+
+#### Export to CSV ####
+write.csv(pred_sum_testing_puf16,"pred_sum_testing_puf16.csv", row.names = FALSE)
+write.csv(outcome_sum_testing_puf16,"outcome_sum_testing_puf16.csv", row.names = FALSE)

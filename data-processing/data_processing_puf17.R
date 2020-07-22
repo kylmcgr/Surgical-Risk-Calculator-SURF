@@ -1,14 +1,12 @@
 # This script processes the data from the NSQIP 2017 dataset
 # The NSQIP 2017 data set must first be acquired prior to running the script. 
-# The path to the location of the data should be updated to the location of the file.
+# The working directory should be set to the location of the data.
 # The output of this file is pred_puf17 (a data table of predictors) and outcomes_puf17 (a data table of outcomes).
 # Kyle McGraw, July 2019
 
 
 #### Import Data ####
-
-# Set to location of data
-datatrain_puf17 <- read.csv('/Users/User/Documents/NSQIP Surgical Data/acs_nsqip_puf17.txt', sep="\t", header = TRUE, stringsAsFactors = FALSE)
+datatrain_puf17 <- read.csv('acs_nsqip_puf17.txt', sep="\t", header = TRUE, stringsAsFactors = FALSE)
 
 
 #### Pre-processing ####
@@ -537,3 +535,8 @@ outcomes_puf17 <- transmute(datatrain_puf17,
                            num_cdiff = if_else(is.na(NOTHCDIFF), 0, as.numeric(NOTHCDIFF),missing=0),
                            days_cdiff = if_else(is.na(DOTHCDIFF), -99, as.numeric(DOTHCDIFF),missing=0),
 )
+
+
+#### Export to CSV ####
+write.csv(pred_puf17,"pred_puf17.csv", row.names = FALSE)
+write.csv(outcomes_puf17,"outcomes_puf17.csv", row.names = FALSE)

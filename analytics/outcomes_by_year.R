@@ -1,8 +1,15 @@
 # This script creates a table of outcomes for the NSQIP 2016, 2017, and 2018 datasets
 # outcome_grouping_puf16.R, outcome_grouping_puf17.R, and outcome_grouping_puf18.R must be run prior
 # to running the script for the grouped_outcomes_puf16, grouped_outcomes_puf17, and grouped_outcomes_puf18 objects.
-# The path to the location of the exported file should be updated.
+# The working directory should be set to the location of the data prior to running the script.
+# This file generates latex code for a table of outcomes: outcomes.tex
 # Kyle McGraw, July 2019
+
+
+### Import Data ###
+grouped_outcomes_puf16 <- read.csv('grouped_outcomes_puf16.csv')
+grouped_outcomes_puf17 <- read.csv('grouped_outcomes_puf17.csv')
+grouped_outcomes_puf18 <- read.csv('grouped_outcomes_puf18.csv')
 
 
 #### Outcomes by Year ####
@@ -27,5 +34,5 @@ for (i in outcome_names){
 # Adds row names
 row.names(outcomes) <- outcome_labels
 
-# Export to file, change path if needed
-print(xtable(outcomes, caption = "Outcomes by Year", type = "latex"), file = paste("/Users/User/Documents/NSQIP Surgical Data/outcomes.tex", sep = ""))
+# Export latex code to file
+print(xtable(outcomes, caption = "Outcomes by Year", type = "latex"), file = paste("Latex Code/outcomes.tex", sep = ""))

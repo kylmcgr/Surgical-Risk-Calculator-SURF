@@ -1,3 +1,11 @@
+
+
+
+### Import Data ###
+pred_puf18 <- read.csv('pred_puf18.csv')
+grouped_outcomes_puf18 <- read.csv('grouped_outcomes_puf18.csv')
+
+
 male <- pred_puf18$male
 age <- pred_puf18$patient_age
 white <- pred_puf18$race_white
@@ -45,7 +53,7 @@ is_dead <- glm(dead ~ female + male + patient_age + BMI + diabetes_no + diabetes
                Dialysis_y + Dialysis_n + Diss_cancer_y + Diss_cancer_n + Chronic_steroid_y + Chronic_steroid_n + Sepsis_none + 
                Sepsis_sepsis + Sepsis_shock + Sepsis_sirs + Emergency_y + Emergency_n + ASA_no + ASA_mild + ASA_severe + ASA_life + 
                ASA_moribund + ASA_none, data = NSQIP_dead, family = "binomial")
-
+summary(is_dead)
 
 
 # predict(object, newdata = NULL)

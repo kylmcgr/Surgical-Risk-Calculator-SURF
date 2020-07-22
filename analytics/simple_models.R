@@ -2,7 +2,13 @@
 # data_processing_puf16.R, data_processing_puf17.R, data_processing_puf18.R, outcome_grouping_puf16.R,
 # outcome_grouping_puf17.R, and outcome_grouping_puf18.R must all be run prior to running the script for the 
 # pred_puf16, pred_puf17, pred_puf18, grouped_outcomes_puf16, grouped_outcomes_puf17, and grouped_outcomes_puf18 objects.
+# This script prints out summaries of the models created
 # Kyle McGraw, July 2019
+
+
+### Import Data ###
+pred_puf18 <- read.csv('pred_puf18.csv')
+grouped_outcomes_puf18 <- read.csv('grouped_outcomes_puf18.csv')
 
 
 #### Logit Models ####

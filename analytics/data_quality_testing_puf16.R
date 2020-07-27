@@ -19,9 +19,9 @@ pre16 <- read.csv('acs_nsqip_puf16.txt', sep="\t", header = TRUE, stringsAsFacto
 # Only uses categories that have less than 15 options to only include multiple choice categories
 
 # Creates new empty file for all three sets of tables
-file.create("postPredictors16.tex")
-file.create("postOutcomes16.tex")
-file.create("pre16.tex")
+file.create("Latex Code/postPredictors16.tex")
+file.create("Latex Code/postOutcomes16.tex")
+file.create("Latex Code/pre16.tex")
 
 # Recoded predictors
 # Appends each variable to file as an additional table

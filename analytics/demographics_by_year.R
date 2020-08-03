@@ -64,4 +64,4 @@ for (i in demo_names){
 row.names(demo) <- demo_labels
 
 # Export latex code to file
-print(xtable(demo, caption = "Demographics by Year", type = "latex"), file = paste("Latex Code/demographics.tex", sep = ""))
+print(xtable(demo, caption = "Demographics by Year", type = "latex"), file = "Latex Code/demographics.tex")

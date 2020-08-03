@@ -35,4 +35,4 @@ for (i in outcome_names){
 row.names(outcomes) <- outcome_labels
 
 # Export latex code to file
-print(xtable(outcomes, caption = "Outcomes by Year", type = "latex"), file = paste("Latex Code/outcomes.tex", sep = ""))
+print(xtable(outcomes, caption = "Outcomes by Year", type = "latex"), file = "Latex Code/outcomes.tex")

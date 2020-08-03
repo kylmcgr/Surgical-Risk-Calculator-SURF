@@ -10,14 +10,14 @@ outcomes_puf16 <- read.csv('outcomes_puf16.csv')
 # Groups outcomes
 grouped_outcomes_puf16 <- transmute(outcomes_puf16,
                             
-                            # Discharge Destination
-                            y_discharge_home = discharge_home,
-                            
-                            # Total operation time
-                            y_optime = optime,
-                            
-                            # Length of total hospital stay 
-                            y_hosp_stay = total_hosp_stay,
+                            # # Discharge Destination
+                            # y_discharge_home = discharge_home,
+                            # 
+                            # # Total operation time
+                            # y_optime = optime,
+                            # 
+                            # # Length of total hospital stay 
+                            # y_hosp_stay = total_hosp_stay,
                             
                             # Still in Hospital 
                             y_discharge = if_else(still_in_hosp_y == 0 | days_discharge >= 0 | dicharge_year > 0, 1, 0),
@@ -27,15 +27,15 @@ grouped_outcomes_puf16 <- transmute(outcomes_puf16,
                             
                             # Unplanned Reoperation
                             y_reop = if_else(return_OR_y == 1 | reop1_y == 1 | days_reop1 >= 0 | reop2_y == 1 | days_reop2 >= 0 | reop3plus_y == 1, 1, 0),
-                            y_related_reop = if_else(related_reop1_y == 1 | related_reop2_y == 1, 1, 0),
+                            # y_related_reop = if_else(related_reop1_y == 1 | related_reop2_y == 1, 1, 0),
                             
                             # Hospital Readmission
                             y_readmit = if_else(readmit1_y == 1 | unplan_readmit1_y == 1 | days_readmit1 >= 0 | readmit2_y == 1 | unplan_readmit2_y == 1 | 
                                                   days_readmit2 >= 0 | readmit3_y == 1 | unplan_readmit3_y == 1 | days_readmit3 >= 0 | readmit4_y == 1 | 
                                                   unplan_readmit4_y == 1 | days_readmit4 >= 0 | readmit5_y == 1 | unplan_readmit5_y == 1 | 
                                                   days_readmit5 >= 0, 1, 0),
-                            y_related_readmit = if_else(unplan_readmit1_related_y == 1 | unplan_readmit2_related_y == 1 | unplan_readmit3_related_y == 1 | 
-                                                          unplan_readmit4_related_y == 1 | unplan_readmit5_related_y == 1, 1, 0),
+                            # y_related_readmit = if_else(unplan_readmit1_related_y == 1 | unplan_readmit2_related_y == 1 | unplan_readmit3_related_y == 1 | 
+                            #                               unplan_readmit4_related_y == 1 | unplan_readmit5_related_y == 1, 1, 0),
                             
                             # Superficial Incisional SSI
                             y_sup_ssi = if_else(sup_ssi_y == 1 | sup_ssi_patos_y == 1 | num_sup_ssi >= 1 | days_sup_ssi >= 0, 1, 0),
@@ -94,9 +94,10 @@ grouped_outcomes_puf16 <- transmute(outcomes_puf16,
                             #  Clostridium Difficile (C.diff) Colitis
                             y_cdiff = if_else(cdiff_y == 1 | num_cdiff >= 1 | days_cdiff >= 0, 1, 0),
                             
-                            # Sum of Outcomes (not including readmission and above)
-                            y_all = y_sup_ssi + y_deep_ssi + y_organ_ssi + y_wound_disruption + y_pneumonia + y_unplanned_intubation + y_emb +
-                              y_vent + y_PRF + y_ARF + y_uti + y_stroke + y_cpr + y_mi + y_trans + y_thromb + y_sepsis + y_sepshock + y_cdiff,
+                            # Sum of Outcomes
+                            y_all = y_discharge +y_dead + y_reop + y_readmit + y_sup_ssi + y_deep_ssi + y_organ_ssi + 
+                              y_wound_disruption + y_pneumonia + y_unplanned_intubation + y_emb + y_vent + y_PRF + 
+                              y_ARF + y_uti + y_stroke + y_cpr + y_mi + y_trans + y_thromb + y_sepsis + y_sepshock + y_cdiff,
 
                             y_any = if_else(y_all > 0, 1, 0),
 )

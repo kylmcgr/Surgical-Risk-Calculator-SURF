@@ -38,7 +38,7 @@ for (i in colnames(pred_puf17)){
     temp_table <- gsub("_", "-", temp_table)
     
     # Append latex code to file
-    write(temp_table, file = paste("Latex Code/postPredictors17.tex", sep = ""), append = TRUE)
+    write(temp_table, file = "Latex Code/postPredictors17.tex", append = TRUE)
   }
 }
 
@@ -57,7 +57,7 @@ for (i in colnames(outcomes_puf17)){
     temp_table <- gsub("_", "-", temp_table)
     
     # Append latex code to file
-    write(temp_table, file = paste("Latex Code/postOutcomes17.tex", sep = ""), append = TRUE)
+    write(temp_table, file = "Latex Code/postOutcomes17.tex", append = TRUE)
   }
 }
 
@@ -76,7 +76,7 @@ for (i in colnames(pre17)){
     temp_table <- gsub("_", "-", temp_table)
     
     # Append latex code to file
-    write(temp_table, file = paste("Latex Code/pre17.tex", sep = ""), append = TRUE)
+    write(temp_table, file = "Latex Code/pre17.tex", append = TRUE)
   }
 }
 

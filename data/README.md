@@ -1,0 +1,1 @@
+This folder needs acs_nsqip_puf16.txt, acs_nsqip_puf17.txt, acs_nsqip_puf18.txt from [the ACS NSQIP](https://www.facs.org/quality-programs/acs-nsqip). The data processing files should be run to generate the other data files from these.

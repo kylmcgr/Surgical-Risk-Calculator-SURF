@@ -104,7 +104,7 @@ for (i in outcome_names){
   print(summary(NSQIP_var))
 
   NSQIP_var <- predict(NSQIP_var, testdata, type="response")
-  pdf(paste(i, ".pdf", sep = ""))
+  pdf(paste0(i, ".pdf"))
   plot(NSQIP_var)
   dev.off()
 }

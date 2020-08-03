@@ -22,22 +22,24 @@ path <- "/Users/User/OneDrive - California Institute of Technology/Caltech/Frosh
 
 
 #### Import and Recoding of Data ####
-source(paste(path, "data-processing/data_processing_puf16.R", sep = "/"))
-source(paste(path, "data-processing/data_processing_puf17.R", sep = "/"))
-source(paste(path, "data-processing/data_processing_puf18.R", sep = "/"))
+source(paste0(path, "/data-processing/data_processing_puf16.R"))
+source(paste0(path, "/data-processing/data_processing_puf17.R"))
+source(paste0(path, "/data-processing/data_processing_puf18.R"))
 
 #### Outcome Grouping ####
-source(paste(path, "data-processing/outcome_grouping_puf16.R", sep = "/"))
-source(paste(path, "data-processing/outcome_grouping_puf17.R", sep = "/"))
-source(paste(path, "data-processing/outcome_grouping_puf18.R", sep = "/"))
+source(paste0(path, "/data-processing/outcome_grouping_puf16.R"))
+source(paste0(path, "/data-processing/outcome_grouping_puf17.R"))
+source(paste0(path, "/data-processing/outcome_grouping_puf18.R"))
 
 #### Generation of Simmple Verification Material and Tables ####
-source(paste(path, "analytics/data_quality_testing_puf16.R", sep = "/"))
-source(paste(path, "analytics/data_quality_testing_puf17.R", sep = "/"))
-source(paste(path, "analytics/data_quality_testing_puf18.R", sep = "/"))
-source(paste(path, "analytics/demographics_by_year.R", sep = "/"))
-source(paste(path, "analytics/outcomes_by_year.R", sep = "/"))
+source(paste0(path, "/analytics/data_quality_testing_puf16.R"))
+source(paste0(path, "/analytics/data_quality_testing_puf17.R"))
+source(paste0(path, "/analytics/data_quality_testing_puf18.R"))
+source(paste0(path, "/analytics/demographics_by_year.R"))
+source(paste0(path, "/analytics/outcomes_by_year.R"))
+source(paste0(path, "/analytics/surgery_by_year.R"))
+
 
 #### Models ####
-source(paste(path, "analytics/simple_models.R", sep = "/"))
-source(paste(path, "analytics/NSQIP_model.R", sep = "/"))
+source(paste0(path, "/analytics/simple_models.R"))
+source(paste0(path, "/analytics/NSQIP_model.R"))

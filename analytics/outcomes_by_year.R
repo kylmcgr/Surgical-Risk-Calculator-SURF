@@ -20,8 +20,8 @@ x <- c("2016", "2017", "2018")
 colnames(outcomes) <- x
 
 # List of variable names to be used and labels for each variable in the table
-outcome_names <- c("y_discharge", "y_dead", "y_reop", "y_related_reop", "y_readmit", "y_related_readmit", "y_sup_ssi", "y_deep_ssi", "y_organ_ssi", "y_wound_disruption", "y_pneumonia", "y_unplanned_intubation", "y_emb", "y_vent", "y_PRF", "y_ARF", "y_uti", "y_stroke", "y_cpr", "y_mi", "y_trans", "y_thromb", "y_sepsis", "y_sepshock", "y_cdiff")
-outcome_labels <- c("Discharged", "Dead", "Reoperation", "Related Reoperation", "Readmission", "Related Readmission", "Superficial Incisional SS", "Deep Incisional SSI", "Organ SSI", "Wound Disruption", "Pneumonia", "Unplanned Intubation", "Pulmonary Embolism", "Ventilator", "Progressive Renal Failure", "Acute Renal Failure", "Urinary Tract Infection", "Stroke", "Cardiac Arrest Requiring CPR", "Myocardial Infarction", "Bleeding Transfusions", "DVT/Thrombophlebitis", "Sepsis", "Septic Shock", "Clostridium Difficile Colitis")
+outcome_names <- c("y_discharge", "y_dead", "y_reop", "y_readmit", "y_sup_ssi", "y_deep_ssi", "y_organ_ssi", "y_wound_disruption", "y_pneumonia", "y_unplanned_intubation", "y_emb", "y_vent", "y_PRF", "y_ARF", "y_uti", "y_stroke", "y_cpr", "y_mi", "y_trans", "y_thromb", "y_sepsis", "y_sepshock", "y_cdiff")
+outcome_labels <- c("Discharged", "Dead", "Reoperation", "Readmission", "Superficial Incisional SS", "Deep Incisional SSI", "Organ SSI", "Wound Disruption", "Pneumonia", "Unplanned Intubation", "Pulmonary Embolism", "Ventilator", "Progressive Renal Failure", "Acute Renal Failure", "Urinary Tract Infection", "Stroke", "Cardiac Arrest Requiring CPR", "Myocardial Infarction", "Bleeding Transfusions", "DVT/Thrombophlebitis", "Sepsis", "Septic Shock", "Clostridium Difficile Colitis")
 
 # Adds each variable to the table
 for (i in outcome_names){

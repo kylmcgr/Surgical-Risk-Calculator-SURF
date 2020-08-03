@@ -27,7 +27,7 @@ datatrain_puf17[datatrain_puf17 == "90+"] = 90
 
 #### Predictor Processing ####
 # Many NAs are not dealt with yet
-# NAs in outcomes variables with days are turned into -99 for outcome grouping
+# NAs in outcomes variables with days are turned into -1 for outcome grouping
 # for categorical predictors, NAs not put in a category
 
 pred_puf17 <- transmute(datatrain_puf17,
@@ -51,11 +51,11 @@ pred_puf17 <- transmute(datatrain_puf17,
                         
                         # CPT number
                         cpt = as.numeric(CPT),
-                        # CPT_plastic = (CPT == 19318 | CPT == 19324 | CPT == 19325 |
-                        #                  CPT == 19340 | CPT == 19342 | CPT == 19357 |
-                        #                  CPT == 19361 | CPT == 19364 | CPT == 19366 |
-                        #                  CPT == 19367 | CPT == 19368 | CPT == 19369 |
-                        #                  CPT == 19370 | CPT == 19371 | CPT == 19380),
+                        CPT_plastic = (CPT == 19318 | CPT == 19324 | CPT == 19325 |
+                                         CPT == 19340 | CPT == 19342 | CPT == 19357 |
+                                         CPT == 19361 | CPT == 19364 | CPT == 19366 |
+                                         CPT == 19367 | CPT == 19368 | CPT == 19369 |
+                                         CPT == 19370 | CPT == 19371 | CPT == 19380),
                         
                         # In/Out-Patient Status
                         inpatient = if_else(INOUT == "Inpatient", 1, 0,missing=0),
@@ -286,7 +286,7 @@ pred_puf17 <- transmute(datatrain_puf17,
 
 #### Outcome Processing ####
 # Many NAs are not dealt with yet
-# NAs in outcomes variables with days are turned into -99 for outcome grouping
+# NAs in outcomes variables with days are turned into -1 for outcome grouping
 # for categorical predictors, NAs not put in a category
 
 outcomes_puf17 <- transmute(datatrain_puf17,
@@ -305,14 +305,14 @@ outcomes_puf17 <- transmute(datatrain_puf17,
                            
                            # Total operation time
                            optime = as.numeric(OPTIME),
-                           # optime = if_else(is.na(OPTIME), -99, as.numeric(OPTIME),missing=0),
+                           # optime = if_else(is.na(OPTIME), -1, as.numeric(OPTIME),missing=-1),
                            # Hospital discharge Year
                            dicharge_year = if_else(is.na(HDISDT), 0, as.numeric(HDISDT),missing=0),
                            # Year of death
                            death_year = if_else(is.na(YRDEATH), 0, as.numeric(YRDEATH),missing=0),
                            # Length of total hospital stay 
                            total_hosp_stay = as.numeric(TOTHLOS),
-                           # total_hosp_stay = if_else(is.na(TOTHLOS), -99, as.numeric(TOTHLOS),missing=0),
+                           # total_hosp_stay = if_else(is.na(TOTHLOS), -1, as.numeric(TOTHLOS),missing=-1),
                            
                            # Superficial Incisional SS
                            num_sup_ssi = if_else(is.na(NSUPINFEC), 0, as.numeric(NSUPINFEC),missing=0),
@@ -320,7 +320,7 @@ outcomes_puf17 <- transmute(datatrain_puf17,
                            sup_ssi_n = if_else(SUPINFEC == "0", 1, 0,missing=0),
                            sup_ssi_patos_y = if_else(SSSIPATOS == "Yes", 1, 0,missing=0),
                            sup_ssi_patos_n = if_else(SSSIPATOS == "0" , 1, 0,missing=0),
-                           days_sup_ssi = if_else(is.na(DSUPINFEC), -99, as.numeric(DSUPINFEC),missing=0),
+                           days_sup_ssi = if_else(is.na(DSUPINFEC), -1, as.numeric(DSUPINFEC),missing=-1),
                            
                            # Deep Incisional SSI
                            num_deep_ssi = if_else(is.na(NWNDINFD), 0, as.numeric(NWNDINFD),missing=0),
@@ -328,7 +328,7 @@ outcomes_puf17 <- transmute(datatrain_puf17,
                            deep_ssi_n = if_else(WNDINFD == "0", 1, 0,missing=0),
                            deep_ssi_patos_y = if_else(DSSIPATOS == "Yes", 1, 0,missing=0),
                            deep_ssi_patos_n = if_else(DSSIPATOS == "0", 1, 0,missing=0),
-                           days_deep_ssi = if_else(is.na(DWNDINFD), -99, as.numeric(DWNDINFD),missing=0),
+                           days_deep_ssi = if_else(is.na(DWNDINFD), -1, as.numeric(DWNDINFD),missing=-1),
                            
                            # Organ/Space SSI
                            num_organ_ssi = if_else(is.na(NORGSPCSSI), 0, as.numeric(NORGSPCSSI),missing=0),
@@ -336,13 +336,13 @@ outcomes_puf17 <- transmute(datatrain_puf17,
                            organ_ssi_n = if_else(ORGSPCSSI == "0"  , 1, 0,missing=0),
                            organ_ssi_patos_y = if_else(OSSIPATOS == "Yes", 1, 0,missing=0),
                            organ_ssi_patos_n = if_else(OSSIPATOS == "0" , 1, 0,missing=0),
-                           days_organ_ssi = if_else(is.na(DORGSPCSSI), -99, as.numeric(DORGSPCSSI),missing=0),
+                           days_organ_ssi = if_else(is.na(DORGSPCSSI), -1, as.numeric(DORGSPCSSI),missing=-1),
                            
                            # Wound Disruption
                            num_wound_disruption = if_else(is.na(NDEHIS), 0, as.numeric(NDEHIS),missing=0),
                            wound_disruption_y = if_else(DEHIS == "Wound Disruption", 1, 0,missing=0),
                            wound_disruption_n = if_else(DEHIS == "0", 1, 0,missing=0),
-                           days_wound_disruption = if_else(is.na(DDEHIS), -99, as.numeric(DDEHIS),missing=0),
+                           days_wound_disruption = if_else(is.na(DDEHIS), -1, as.numeric(DDEHIS),missing=-1),
                            
                            # Pneumonia
                            num_pneumonia = if_else(is.na(NOUPNEUMO), 0, as.numeric(NOUPNEUMO),missing=0),
@@ -350,19 +350,19 @@ outcomes_puf17 <- transmute(datatrain_puf17,
                            pneumonia_n = if_else(OUPNEUMO == "0", 1, 0,missing=0),
                            pneumonia_patos_y = if_else(PNAPATOS == "Yes", 1, 0,missing=0),
                            pneumonia_patos_n = if_else(PNAPATOS == "0", 1, 0,missing=0),
-                           days_pneumonia = if_else(is.na(DOUPNEUMO), -99, as.numeric(DOUPNEUMO),missing=0),
+                           days_pneumonia = if_else(is.na(DOUPNEUMO), -1, as.numeric(DOUPNEUMO),missing=-1),
                            
                            # Unplanned Intubation
                            num_unplanned_intubation = if_else(is.na(NREINTUB), 0, as.numeric(NREINTUB),missing=0),
                            unplanned_intubation_y = if_else(REINTUB == "Unplanned Intubation", 1, 0,missing=0),
                            unplanned_intubation_n = if_else(REINTUB == "0", 1, 0,missing=0),
-                           days_unplanned_intubation = if_else(is.na(DREINTUB), -99, as.numeric(DREINTUB),missing=0),
+                           days_unplanned_intubation = if_else(is.na(DREINTUB), -1, as.numeric(DREINTUB),missing=-1),
                            
                            # Pulmonary Embolism
                            num_emb = if_else(is.na(NPULEMBOL), 0, as.numeric(NPULEMBOL),missing=0),
                            emb_y = if_else(PULEMBOL == "Pulmonary Embolism" , 1, 0,missing=0),
                            emb_n = if_else(PULEMBOL == "0" , 1, 0,missing=0),
-                           days_emb = if_else(is.na(DPULEMBOL), -99, as.numeric(DPULEMBOL),missing=0),
+                           days_emb = if_else(is.na(DPULEMBOL), -1, as.numeric(DPULEMBOL),missing=-1),
                            
                            # On Ventilator > 48 Hours
                            num_vent = if_else(is.na(NFAILWEAN), 0, as.numeric(NFAILWEAN),missing=0),
@@ -370,19 +370,19 @@ outcomes_puf17 <- transmute(datatrain_puf17,
                            vent_n = if_else(FAILWEAN == "0", 1, 0,missing=0),
                            vent_patos_y = if_else(VENTPATOS == "Yes", 1, 0,missing=0 ),
                            vent_patos_n = if_else(VENTPATOS == "0", 1, 0,missing=0 ),
-                           days_vent = if_else(is.na(DFAILWEAN), -99, as.numeric(DFAILWEAN),missing=0),
+                           days_vent = if_else(is.na(DFAILWEAN), -1, as.numeric(DFAILWEAN),missing=-1),
                            
                            # Progressive Renal Insufficiency
                            num_PRF = if_else(is.na(NRENAINSF), 0, as.numeric(NRENAINSF),missing=0),
                            PRF_y = if_else(RENAINSF == "Progressive Renal Insufficiency", 1, 0,missing=0),
                            PRF_n = if_else(RENAINSF == "0", 1, 0,missing=0),
-                           days_PRF = if_else(is.na(DRENAINSF), -99, as.numeric(DRENAINSF),missing=0),
+                           days_PRF = if_else(is.na(DRENAINSF), -1, as.numeric(DRENAINSF),missing=-1),
                            
                            # Acute Renal Failure
                            num_ARF = if_else(is.na(NOPRENAFL), 0, as.numeric(NOPRENAFL),missing=0),     
                            ARF_y = if_else(OPRENAFL == "Acute Renal Failure", 1, 0,missing=0),
                            ARF_n = if_else(OPRENAFL == "0", 1, 0,missing=0),
-                           days_ARF = if_else(is.na(DOPRENAFL), -99, as.numeric(DOPRENAFL),missing=0),
+                           days_ARF = if_else(is.na(DOPRENAFL), -1, as.numeric(DOPRENAFL),missing=-1),
                            
                            # Urinary Tract Infection
                            num_uti = if_else(is.na(NURNINFEC), 0, as.numeric(NURNINFEC),missing=0),
@@ -390,37 +390,37 @@ outcomes_puf17 <- transmute(datatrain_puf17,
                            uti_n = if_else(URNINFEC == "0", 1, 0,missing=0),
                            uti_patos_y = if_else(UTIPATOS=="Yes", 1, 0,missing=0),
                            uti_patos_n = if_else(UTIPATOS=="0", 1, 0,missing=0),
-                           days_uti = if_else(is.na(DURNINFEC), -99, as.numeric(DURNINFEC),missing=0),
+                           days_uti = if_else(is.na(DURNINFEC), -1, as.numeric(DURNINFEC),missing=-1),
                            
                            # Stroke/Cerebral Vascular Accident
                            num_stroke = if_else(is.na(NCNSCVA), 0, as.numeric(NCNSCVA),missing=0),
                            cva_neuro_def_y = if_else(CNSCVA == "Stroke/CVA", 1, 0,missing=0),
                            cva_neuro_def_n = if_else(CNSCVA == "0", 1, 0,missing=0),
-                           days_stroke = if_else(is.na(DCNSCVA), -99, as.numeric(DCNSCVA),missing=0),
+                           days_stroke = if_else(is.na(DCNSCVA), -1, as.numeric(DCNSCVA),missing=-1),
                            
                            # Cardiac Arrest Requiring CPR
                            num_cpr = if_else(is.na(NCDARREST), 0, as.numeric(NCDARREST),missing=0),
                            cpr_y = if_else(CDARREST == "Cardiac Arrest Requiring CPR", 1, 0,missing=0),
                            cpr_n = if_else(CDARREST == "0", 1, 0,missing=0),
-                           days_cpr = if_else(is.na(DCDARREST), -99, as.numeric(DCDARREST),missing=0),
+                           days_cpr = if_else(is.na(DCDARREST), -1, as.numeric(DCDARREST),missing=-1),
                            
                            # Myocardial Infarction
                            num_mi = if_else(is.na(NCDMI), 0, as.numeric(NCDMI),missing=0),
                            mi_y = if_else(CDMI == "Myocardial Infarction", 1, 0,missing=0),
                            mi_n = if_else(CDMI == "0", 1, 0,missing=0),
-                           days_mi = if_else(is.na(DCDMI), -99, as.numeric(DCDMI),missing=0),
+                           days_mi = if_else(is.na(DCDMI), -1, as.numeric(DCDMI),missing=-1),
                            
                            # Bleeding Transfusions
                            num_trans = if_else(is.na(NOTHBLEED), 0, as.numeric(NOTHBLEED),missing=0),
                            trans_y = if_else(OTHBLEED == "Transfusions/Intraop/Postop", 1, 0,missing=0),
                            trans_n = if_else(OTHBLEED == "0", 1, 0,missing=0),
-                           days_trans = if_else(is.na(DOTHBLEED), -99, as.numeric(DOTHBLEED),missing=0),
+                           days_trans = if_else(is.na(DOTHBLEED), -1, as.numeric(DOTHBLEED),missing=-1),
                            
                            # DVT/Thrombophlebitis
                            num_thromb = if_else(is.na(NOTHDVT), 0, as.numeric(NOTHDVT),missing=0),
                            thromb_y = if_else(OTHDVT == "DVT Requiring Therapy", 1, 0,missing=0),
                            thromb_n = if_else(OTHDVT == "0", 1, 0,missing=0),
-                           days_thromb = if_else(is.na(DOTHDVT), -99, as.numeric(DOTHDVT),missing=0),
+                           days_thromb = if_else(is.na(DOTHDVT), -1, as.numeric(DOTHDVT),missing=-1),
                            
                            # Sepsis
                            num_sepsis = if_else(is.na(NOTHSYSEP), 0, as.numeric(NOTHSYSEP),missing=0),
@@ -428,7 +428,7 @@ outcomes_puf17 <- transmute(datatrain_puf17,
                            sepsis_n = if_else(OTHSYSEP == "0", 1, 0,missing=0),
                            sepsis_patos_y = if_else(SEPSISPATOS == "Yes", 1,0,missing=0),
                            sepsis_patos_n = if_else(SEPSISPATOS == "0", 1,0,missing=0),
-                           days_sepsis = if_else(is.na(DOTHSYSEP), -99, as.numeric(DOTHSYSEP),missing=0),
+                           days_sepsis = if_else(is.na(DOTHSYSEP), -1, as.numeric(DOTHSYSEP),missing=-1),
                            
                            # Septic Shock
                            num_sepshock = if_else(is.na(NOTHSESHOCK), 0, as.numeric(NOTHSESHOCK),missing=0),
@@ -436,7 +436,7 @@ outcomes_puf17 <- transmute(datatrain_puf17,
                            sepshock_n = if_else(OTHSESHOCK == "0", 1, 0,missing=0),
                            sepshock_patos_y = if_else(SEPSHOCKPATOS == "Yes", 1,0,missing=0),
                            sepshock_patos_n = if_else(SEPSHOCKPATOS == "0", 1,0,missing=0),
-                           days_sepshock = if_else(is.na(DOTHSESHOCK), -99, as.numeric(DOTHSESHOCK),missing=0),
+                           days_sepshock = if_else(is.na(DOTHSESHOCK), -1, as.numeric(DOTHSESHOCK),missing=-1),
                            
                            # Post-op Diagnosis (ICD)
                            postop_ICD9 = PODIAG,
@@ -447,10 +447,10 @@ outcomes_puf17 <- transmute(datatrain_puf17,
                            return_OR_n = if_else(RETURNOR == "0", 1, 0,missing=0),
                            
                            # Days from Operation to Death
-                           days_death = if_else(is.na(DOpertoD), -99, as.numeric(DOpertoD),missing=0),
+                           days_death = if_else(is.na(DOpertoD), -1, as.numeric(DOpertoD),missing=-1),
                            
                            # Days from Operation to Discharge
-                           days_discharge = if_else(is.na(DOptoDis), -99, as.numeric(DOptoDis),missing=0),
+                           days_discharge = if_else(is.na(DOptoDis), -1, as.numeric(DOptoDis),missing=-1),
                            
                            # Still in Hospital > 30 Days 
                            still_in_hosp_y = if_else(STILLINHOSP == "Yes", 1, 0,missing=0),
@@ -459,7 +459,7 @@ outcomes_puf17 <- transmute(datatrain_puf17,
                            # Unplanned Reoperations
                            reop1_y = if_else(REOPERATION1 == "Yes", 1, 0,missing=0),
                            reop1_n = if_else(REOPERATION1 != "Yes", 1, 0,missing=0),
-                           days_reop1 = if_else(is.na(RETORPODAYS), -99, as.numeric(RETORPODAYS),missing=0),
+                           days_reop1 = if_else(is.na(RETORPODAYS), -1, as.numeric(RETORPODAYS),missing=-1),
                            cpt_reop1 = REOPORCPT1,
                            related_reop1_y = if_else(RETORRELATED == "Yes", 1, 0,missing=0),
                            related_reop1_n = if_else(RETORRELATED != "Yes", 1, 0,missing=0),
@@ -468,7 +468,7 @@ outcomes_puf17 <- transmute(datatrain_puf17,
                            
                            reop2_y = if_else(REOPERATION2 == "Yes", 1, 0,missing=0),
                            reop2_n = if_else(REOPERATION2 != "Yes", 1, 0,missing=0),
-                           days_reop2 = if_else(is.na(RETOR2PODAYS), -99, as.numeric(RETOR2PODAYS),missing=0),
+                           days_reop2 = if_else(is.na(RETOR2PODAYS), -1, as.numeric(RETOR2PODAYS),missing=-1),
                            cpt_reop2 = REOPOR2CPT1,
                            related_reop2_y = if_else(RETOR2RELATED == "Yes", 1, 0,missing=0),
                            related_reop2_n = if_else(RETOR2RELATED != "Yes", 1, 0,missing=0),
@@ -481,7 +481,7 @@ outcomes_puf17 <- transmute(datatrain_puf17,
                            # Hospital Readmission
                            readmit1_y = if_else(READMISSION1 == "Yes", 1, 0,missing=0),
                            readmit1_n = if_else(READMISSION1 != "Yes", 1, 0,missing=0),
-                           days_readmit1 = if_else(is.na(READMPODAYS1), -99, as.numeric(READMPODAYS1),missing=0),
+                           days_readmit1 = if_else(is.na(READMPODAYS1), -1, as.numeric(READMPODAYS1),missing=-1),
                            unplan_readmit1_y = if_else(UNPLANNEDREADMISSION1 == "Yes", 1, 0,missing=0),
                            unplan_readmit1_n = if_else(UNPLANNEDREADMISSION1 != "Yes", 1, 0,missing=0),
                            unplan_readmit1_related_y = if_else(READMRELATED1 == "Yes", 1, 0,missing=0),
@@ -489,7 +489,7 @@ outcomes_puf17 <- transmute(datatrain_puf17,
                            
                            readmit2_y = if_else(READMISSION2 == "Yes", 1, 0,missing=0),
                            readmit2_n = if_else(READMISSION2 != "Yes", 1, 0,missing=0),
-                           days_readmit2 = if_else(is.na(READMPODAYS2), -99, as.numeric(READMPODAYS2),missing=0),
+                           days_readmit2 = if_else(is.na(READMPODAYS2), -1, as.numeric(READMPODAYS2),missing=-1),
                            unplan_readmit2_y = if_else(UNPLANNEDREADMISSION2 == "Yes", 1, 0,missing=0),
                            unplan_readmit2_n = if_else(UNPLANNEDREADMISSION2 != "Yes", 1, 0,missing=0),
                            unplan_readmit2_related_y = if_else(READMRELATED2 == "Yes", 1, 0,missing=0),
@@ -497,7 +497,7 @@ outcomes_puf17 <- transmute(datatrain_puf17,
                            
                            readmit3_y = if_else(READMISSION3 == "Yes", 1, 0,missing=0),
                            readmit3_n = if_else(READMISSION3 != "Yes", 1, 0,missing=0),
-                           days_readmit3 = if_else(is.na(READMPODAYS3), -99, as.numeric(READMPODAYS3),missing=0),
+                           days_readmit3 = if_else(is.na(READMPODAYS3), -1, as.numeric(READMPODAYS3),missing=-1),
                            unplan_readmit3_y = if_else(UNPLANNEDREADMISSION3 == "Yes", 1, 0,missing=0),
                            unplan_readmit3_n = if_else(UNPLANNEDREADMISSION3 != "Yes", 1, 0,missing=0),
                            unplan_readmit3_related_y = if_else(READMRELATED3 == "Yes", 1, 0,missing=0),
@@ -505,7 +505,7 @@ outcomes_puf17 <- transmute(datatrain_puf17,
                            
                            readmit4_y = if_else(READMISSION4 == "Yes", 1, 0,missing=0),
                            readmit4_n = if_else(READMISSION4 != "Yes", 1, 0,missing=0),
-                           days_readmit4 = if_else(is.na(READMPODAYS4), -99, as.numeric(READMPODAYS4),missing=0),
+                           days_readmit4 = if_else(is.na(READMPODAYS4), -1, as.numeric(READMPODAYS4),missing=-1),
                            unplan_readmit4_y = if_else(UNPLANNEDREADMISSION4 == "Yes", 1, 0,missing=0),
                            unplan_readmit4_n = if_else(UNPLANNEDREADMISSION4 != "Yes", 1, 0,missing=0),
                            unplan_readmit4_related_y = if_else(READMRELATED4 == "Yes", 1, 0,missing=0),
@@ -513,7 +513,7 @@ outcomes_puf17 <- transmute(datatrain_puf17,
                            
                            readmit5_y = if_else(READMISSION5 == "Yes", 1, 0,missing=0),
                            readmit5_n = if_else(READMISSION5 != "Yes", 1, 0,missing=0),
-                           days_readmit5 = if_else(is.na(READMPODAYS5), -99, as.numeric(READMPODAYS5),missing=0),
+                           days_readmit5 = if_else(is.na(READMPODAYS5), -1, as.numeric(READMPODAYS5),missing=-1),
                            unplan_readmit5_y = if_else(UNPLANNEDREADMISSION5 == "Yes", 1, 0,missing=0),
                            unplan_readmit5_n = if_else(UNPLANNEDREADMISSION5 != "Yes", 1, 0,missing=0),
                            unplan_readmit5_related_y = if_else(READMRELATED5 == "Yes", 1, 0,missing=0),
@@ -533,7 +533,7 @@ outcomes_puf17 <- transmute(datatrain_puf17,
                            cdiff_y = if_else(OTHCDIFF == "C. diff", 1, 0,missing=0),
                            cdiff_n = if_else(OTHCDIFF == "0", 1, 0,missing=0),
                            num_cdiff = if_else(is.na(NOTHCDIFF), 0, as.numeric(NOTHCDIFF),missing=0),
-                           days_cdiff = if_else(is.na(DOTHCDIFF), -99, as.numeric(DOTHCDIFF),missing=0),
+                           days_cdiff = if_else(is.na(DOTHCDIFF), -1, as.numeric(DOTHCDIFF),missing=-1),
 )
 
 

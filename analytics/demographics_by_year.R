@@ -1,15 +1,14 @@
 # This script creates a table of demographics for the NSQIP 2016, 2017, and 2018 datasets
 # data_processing_puf16.R, data_processing_puf17.R, and data_processing_puf18.R must be run prior
 # to running the script for the pred_puf16, pred_puf17, and pred_puf18 objects.
-# The working directory should be set to the location of the data prior to running the script.
 # This file generates latex code for a table of demographics: demographics.tex
 # Kyle McGraw, July 2019
 
 
 ### Import Data ###
-pred_puf16 <- read.csv('pred_puf16.csv')
-pred_puf17 <- read.csv('pred_puf17.csv')
-pred_puf18 <- read.csv('pred_puf18.csv')
+load("./data/pred_puf16.Rda")
+load("./data/pred_puf17.Rda")
+load("./data/pred_puf18.Rda")
 
 
 #### Demographics by Year ####
@@ -64,4 +63,4 @@ for (i in demo_names){
 row.names(demo) <- demo_labels
 
 # Export latex code to file
-print(xtable(demo, caption = "Demographics by Year", type = "latex"), file = "Latex Code/demographics.tex")
+print(xtable(demo, caption = "Demographics by Year", type = "latex"), file = paste0("./tables/", "demographics.tex"))

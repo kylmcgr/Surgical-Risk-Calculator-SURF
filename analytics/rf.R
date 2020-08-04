@@ -6,7 +6,7 @@ library(caret)
 rf.time <- system.time(
   turn.rf <-
     train(
-      as.factor(depvar) ~ .,
+      as.factor(grouped_outcomes_puf16$y_dead) ~ .,
       metric = "ROC",
       method = "rf",
       importance = T,

@@ -1,15 +1,14 @@
 # This script creates a table of the number of a surgery type for the NSQIP 2016, 2017, and 2018 datasets
 # data_processing_puf16.R, data_processing_puf17.R, and data_processing_puf18.R must be run prior
 # to running the script for the pred_puf16, pred_puf17, and pred_puf18 objects.
-# The working directory should be set to the location of the data prior to running the script.
 # This file generates latex code for a table of the number of a surgery type: surgery.tex
 # Kyle McGraw, July 2019
 
 
 ### Import Data ###
-pred_puf16 <- read.csv('pred_puf16.csv')
-pred_puf17 <- read.csv('pred_puf17.csv')
-pred_puf18 <- read.csv('pred_puf18.csv')
+load("./data/pred_puf16.csv")
+load("./data/pred_puf17.csv")
+load("./data/pred_puf18.csv")
 
 
 #### Demographics by Year ####
@@ -52,12 +51,10 @@ for (i in surg_names){
 row.names(surg) <- surg_labels
 
 # Export latex code to file
-print(xtable(surg, caption = "Plastic Surgery", type = "latex"), file = "Latex Code/surgery.tex")
-
+print(xtable(surg, caption = "Plastic Surgery", type = "latex"), file = paste0("./tables/", "surgery.tex"))
 
 # test out cross tab
 library(gmodels)
-CrossTable(new_pred16[["CPT_plastic"]], new_pred16[["surgery_plastic"]])
-CrossTable(new_pred17[["CPT_plastic"]], new_pred17[["surgery_plastic"]])
-CrossTable(new_pred18[["CPT_plastic"]], new_pred18[["surgery_plastic"]])
-
+print(summary(CrossTable(new_pred16[["CPT_plastic"]], new_pred16[["surgery_plastic"]]), latex=TRUE), file = paste0("./tables/", "surgery16.tex"))
+print(summary(CrossTable(new_pred17[["CPT_plastic"]], new_pred17[["surgery_plastic"]]), latex=TRUE), file = paste0("./tables/", "surgery17.tex"))
+print(summary(CrossTable(new_pred18[["CPT_plastic"]], new_pred18[["surgery_plastic"]]), latex=TRUE), file = paste0("./tables/", "surgery18.tex"))

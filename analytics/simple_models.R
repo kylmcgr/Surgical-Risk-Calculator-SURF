@@ -7,8 +7,8 @@
 
 
 ### Import Data ###
-pred_puf18 <- read.csv('pred_puf18.csv')
-grouped_outcomes_puf18 <- read.csv('grouped_outcomes_puf18.csv')
+load("./data/pred_puf18.Rda")
+load("./data/grouped_outcomes_puf18.Rda")
 
 
 #### Logit Models ####

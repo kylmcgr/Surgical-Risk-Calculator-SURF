@@ -1,13 +1,15 @@
 # This script attempts to replicate the NSQIP model using the 2018 dataset
 # data_processing_puf18.R and outcome_grouping_puf18.R must be run prior to 
 # running the script for the pred_puf18 and grouped_outcomes_puf18 objects.
+# This file generates a table of coefficients and figure of the effect of each 
+# predictor individually for each outcome
 # Kyle McGraw, July 2019
 
 
 
 ### Setup Data ###
-pred_puf18 <- read.csv('pred_puf18.csv')
-grouped_outcomes_puf18 <- read.csv('grouped_outcomes_puf18.csv')
+load("./data/pred_puf18.Rda")
+load("./data/grouped_outcomes_puf18.Rda")
 
 # Changes age and BMI to categories
 NSQIP_pred18 <- mutate(pred_puf18,
@@ -101,10 +103,10 @@ for (i in outcome_names){
                       Sepsis_sirs + Emergency_y + ASA_mild + ASA_severe + ASA_life + ASA_moribund + ASA_none,
                    data = y_frame, family = "binomial")
   print(i)
-  print(summary(NSQIP_var))
+  print(summary(NSQIP_var), paste0("./tables/", "NSQIP_", i, ".txt"))
 
   NSQIP_var <- predict(NSQIP_var, testdata, type="response")
-  pdf(paste0(i, ".pdf"))
+  pdf(paste0("./figures/", "NSQIP_", i, ".pdf"))
   plot(NSQIP_var)
   dev.off()
 }

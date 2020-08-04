@@ -1,6 +1,5 @@
 # This script runs some tests on the data from the NSQIP 2018 dataset
 # data_processing_puf18.R must be run prior to running the script for the pred_puf18 and outcomes_puf18 objects.
-# The working directory should be set to the location of the data prior to running the script.
 # This file generates latex code for tables of variables pre and post processing:
 # postPredictors18.tex, postOutcomes18.tex, pre18.tex
 # This file generates two data tables for zero control tests:
@@ -9,9 +8,9 @@
 
 
 ### Import Data ###
-pred_puf18 <- read.csv('pred_puf18.csv')
-outcomes_puf18 <- read.csv('outcomes_puf18.csv')
-pre18 <- read.csv('acs_nsqip_puf18.txt', sep="\t", header = TRUE, stringsAsFactors = FALSE)
+load("./data/pred_puf18.Rda")
+load("./data/outcomes_puf18.Rda")
+pre18 <- read.csv(paste0("./data/", "acs_nsqip_puf18.txt"), sep="\t", header = TRUE, stringsAsFactors = FALSE)
 
 
 #### Frequency Distributions ####
@@ -19,9 +18,9 @@ pre18 <- read.csv('acs_nsqip_puf18.txt', sep="\t", header = TRUE, stringsAsFacto
 # Only uses categories that have less than 15 options to only include multiple choice categories
 
 # Creates new empty file for all three sets of tables
-file.create("Latex Code/postPredictors18.tex")
-file.create("Latex Code/postOutcomes18.tex")
-file.create("Latex Code/pre18.tex")
+file.create(paste0("./tables/", "postPredictors18.tex"))
+file.create(paste0("./tables/", "postOutcomes18.tex"))
+file.create(paste0("./tables/", "pre18.tex"))
 
 # Recoded predictors
 # Appends each variable to file as an additional table
@@ -38,7 +37,7 @@ for (i in colnames(pred_puf18)){
     temp_table <- gsub("_", "-", temp_table)
     
     # Append latex code to file
-    write(temp_table, file = "Latex Code/postPredictors18.tex", append = TRUE)
+    write(temp_table, file = paste0("./tables/", "postPredictors18.tex"), append = TRUE)
   }
 }
 
@@ -57,7 +56,7 @@ for (i in colnames(outcomes_puf18)){
     temp_table <- gsub("_", "-", temp_table)
     
     # Append latex code to file
-    write(temp_table, file = "Latex Code/postOutcomes18.tex", append = TRUE)
+    write(temp_table, file = paste0("./tables/", "postOutcomes18.tex"), append = TRUE)
   }
 }
 
@@ -76,7 +75,7 @@ for (i in colnames(pre18)){
     temp_table <- gsub("_", "-", temp_table)
     
     # Append latex code to file
-    write(temp_table, file = "Latex Code/pre18.tex", append = TRUE)
+    write(temp_table, file = paste0("./tables/", "pre18.tex"), append = TRUE)
   }
 }
 
@@ -290,5 +289,5 @@ outcome_sum_testing_puf18 <- transmute(outcomes_puf18,
 
 
 #### Export to CSV ####
-write.csv(pred_sum_testing_puf18,"pred_sum_testing_puf18.csv", row.names = FALSE)
-write.csv(outcome_sum_testing_puf18,"outcome_sum_testing_puf18.csv", row.names = FALSE)
+save(pred_sum_testing_puf18, file = paste0("./data/", "pred_sum_testing_puf18.Rda"))
+save(outcome_sum_testing_puf18, file = paste0("./data/", "outcome_sum_testing_puf18.Rda"))

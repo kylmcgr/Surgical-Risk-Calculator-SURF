@@ -1,6 +1,5 @@
 # This script runs some tests on the data from the NSQIP 2016 dataset
 # data_processing_puf16.R must be run prior to running the script for the pred_puf16 and outcomes_puf16 objects.
-# The working directory should be set to the location of the data prior to running the script.
 # This file generates latex code for tables of variables pre and post processing:
 # postPredictors16.tex, postOutcomes16.tex, pre16.tex
 # This file generates two data tables for zero control tests:
@@ -9,9 +8,9 @@
 
 
 ### Import Data ###
-pred_puf16 <- read.csv('pred_puf16.csv')
-outcomes_puf16 <- read.csv('outcomes_puf16.csv')
-pre16 <- read.csv('acs_nsqip_puf16.txt', sep="\t", header = TRUE, stringsAsFactors = FALSE)
+load("./data/pred_puf16.Rda")
+load("./data/outcomes_puf16.Rda")
+pre16 <- read.csv(paste0("./data/", "acs_nsqip_puf16.txt"), sep="\t", header = TRUE, stringsAsFactors = FALSE)
 
 
 #### Frequency Distributions ####
@@ -19,9 +18,9 @@ pre16 <- read.csv('acs_nsqip_puf16.txt', sep="\t", header = TRUE, stringsAsFacto
 # Only uses categories that have less than 15 options to only include multiple choice categories
 
 # Creates new empty file for all three sets of tables
-file.create("Latex Code/postPredictors16.tex")
-file.create("Latex Code/postOutcomes16.tex")
-file.create("Latex Code/pre16.tex")
+file.create(paste0("./tables/", "postPredictors16.tex"))
+file.create(paste0("./tables/", "postOutcomes16.tex"))
+file.create(paste0("./tables/", "pre16.tex"))
 
 # Recoded predictors
 # Appends each variable to file as an additional table
@@ -38,7 +37,7 @@ for (i in colnames(pred_puf16)){
     temp_table <- gsub("_", "-", temp_table)
     
     # Append latex code to file
-    write(temp_table, file = "Latex Code/postPredictors16.tex", append = TRUE)
+    write(temp_table, file = paste0("./tables/", "postPredictors16.tex"), append = TRUE)
   }
 }
 
@@ -57,7 +56,7 @@ for (i in colnames(outcomes_puf16)){
     temp_table <- gsub("_", "-", temp_table)
     
     # Append latex code to file
-    write(temp_table, file = "Latex Code/postOutcomes16.tex", append = TRUE)
+    write(temp_table, file = paste0("./tables/", "postOutcomes16.tex"), append = TRUE)
   }
 }
 
@@ -76,7 +75,7 @@ for (i in colnames(pre16)){
     temp_table <- gsub("_", "-", temp_table)
     
     # Append latex code to file
-    write(temp_table, file = "Latex Code/pre16.tex", append = TRUE)
+    write(temp_table, file = paste0("./tables/", "pre16.tex"), append = TRUE)
   }
 }
 
@@ -289,6 +288,6 @@ outcome_sum_testing_puf16 <- transmute(outcomes_puf16,
 )
 
 
-#### Export to CSV ####
-write.csv(pred_sum_testing_puf16,"pred_sum_testing_puf16.csv", row.names = FALSE)
-write.csv(outcome_sum_testing_puf16,"outcome_sum_testing_puf16.csv", row.names = FALSE)
+#### Export R Objects ####
+save(pred_sum_testing_puf16, file = paste0("./data/", "pred_sum_testing_puf16.Rda"))
+save(outcome_sum_testing_puf16, file = paste0("./data/", "outcome_sum_testing_puf16.Rda"))

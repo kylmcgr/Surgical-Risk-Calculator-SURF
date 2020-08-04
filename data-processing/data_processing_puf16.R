@@ -1,12 +1,11 @@
 # This script processes the data from the NSQIP 2016 dataset
-# The NSQIP 2016 data set must first be acquired prior to running the script. 
-# The working directory should be set to the location of the data prior to running the script.
+# The NSQIP 2016 data set must first be acquired prior to running the script.
 # The output of this file is pred_puf16 (a data table of predictors) and outcomes_puf16 (a data table of outcomes).
 # Kyle McGraw, July 2019
 
 
 #### Import Data ####
-datatrain_puf16 <- read.csv('acs_nsqip_puf16.txt', sep="\t", header = TRUE, stringsAsFactors = FALSE)
+datatrain_puf16 <- read.csv(paste0("./data/", "acs_nsqip_puf16.txt"), sep="\t", header = TRUE, stringsAsFactors = FALSE)
 
 
 #### Pre-processing ####
@@ -535,6 +534,6 @@ outcomes_puf16 <- transmute(datatrain_puf16,
 )
 
 
-#### Export to CSV ####
-write.csv(pred_puf16,"pred_puf16.csv", row.names = FALSE)
-write.csv(outcomes_puf16,"outcomes_puf16.csv", row.names = FALSE)
+#### Export R Objects ####
+save(pred_puf16, file = paste0("./data/", "pred_puf16.Rda"))
+save(outcomes_puf16, file = paste0("./data/", "outcomes_puf16.Rda"))

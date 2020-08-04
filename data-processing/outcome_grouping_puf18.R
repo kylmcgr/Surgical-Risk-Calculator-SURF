@@ -1,11 +1,10 @@
 # This script groups outcomes from the NSQIP 2018 dataset
 # data_processing_puf18.R must be run prior to running the script to generate the outcomes_puf18 object.
-# The working directory should be set to the location of the data prior to running the script.
 # The output of this file is grouped_outcomes_puf18 (a data table of grouped outcomes).
 # Kyle McGraw, July 2019
 
 # Import dataframe
-outcomes_puf18 <- read.csv('outcomes_puf18.csv')
+load("./data/outcomes_puf18.Rda")
 
 # Groups outcomes
 grouped_outcomes_puf18 <- transmute(outcomes_puf18,
@@ -102,5 +101,5 @@ grouped_outcomes_puf18 <- transmute(outcomes_puf18,
                             y_any = if_else(y_all > 0, 1, 0),
 )
 
-# Export to CSV
-write.csv(grouped_outcomes_puf18,"grouped_outcomes_puf18.csv", row.names = FALSE)
+# Export R Object
+save(grouped_outcomes_puf18, file = paste0("./data/", "grouped_outcomes_puf18.Rda"))

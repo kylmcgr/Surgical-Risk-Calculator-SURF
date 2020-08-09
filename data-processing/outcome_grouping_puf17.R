@@ -3,6 +3,8 @@
 # The output of this file is grouped_outcomes_puf17 (a data table of grouped outcomes).
 # Kyle McGraw, July 2019
 
+library(dplyr)
+
 # Import dataframe
 load("./data/outcomes_puf17.Rda")
 

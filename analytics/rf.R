@@ -1,70 +1,48 @@
 library(caret)
+library(dplyr)
 
+### Setup Data ###
+load("./data/pred_puf16.Rda")
+load("./data/grouped_outcomes_puf16.Rda")
 
-
-# Random Forest ==============================================================
-rf.time <- system.time(
-  turn.rf <-
-    train(
-      as.factor(grouped_outcomes_puf16$y_dead) ~ .,
-      metric = "ROC",
-      method = "rf",
-      importance = T,
-      ntree = 1000,
-      tuneGrid = data.frame(.mtry = mtrys),
-      trControl = tc,
-      data = pred_puf16
-    )
-)
-save(
-  list = c("rf.time", "turn.rf"),
-  file = ifelse(
-    choice == "train", "./output/turn.rf.Rda", "./output/turn.rf_robust.Rda"
-  )
-)
-print("RF run complete.")
-
-
-mc <- makeCluster(cl)
-registerDoParallel(mc)
+train_dead <- mutate(pred_puf16, y_dead = grouped_outcomes_puf16[["y_dead"]])
+train_dead2 <- train_dead[complete.cases(train_dead), ]
 
 # We are mimicking caret package's choice of mtry grid
 # while adding another choice from the Breiman randomForest package ============
-for (choice in c("train", "train_robust")) {
-  mtrys <-
-    c(
-      floor(sqrt(ncol(turn_list[[choice]] %>% dplyr::select(-depvar)))),
-      2, 
-      floor((2 + (dim(turn_list[[choice]])[2] - 1)) / 2),
-      dim(turn_list[[choice]])[2]
-    )
-  
-  # Run random forest separately for each mtry and store the output ============
-  rf.time.cv <- system.time(
-    turn.rf <- 
-      train(
-        as.factor(depvar) ~ .,
-        metric = "ROC",
-        method = "rf",
-        importance = T,
-        proximity = F,
-        ntree = 1000,
-        tuneGrid = data.frame(.mtry = expand.grid(.mtry = mtrys)),
-        trControl = tc,
-        data = turn_list[[choice]]
-      )
+mtrys <-
+  c(
+    floor(sqrt(ncol(pred_puf16))),
+    2, 
+    floor((2 + (dim(pred_puf16)[2] - 1)) / 2),
+    dim(pred_puf16)[2]
   )
-  mtrys <- turn.rf$bestTune$mtry
-  
-  save(
-    list = c(
-      "rf.time.cv", "mtrys", "tc", "turn.rf", "mtrys"
-    ),
-    file = ifelse(
-      choice == "train", "./output/rfcv.Rda", "./output/rfcv_robust.Rda"
+
+# Run random forest separately for each mtry and store the output ============
+rf.time.cv <- system.time(
+  turn.rf <- 
+    train(
+      y_dead ~ .,
+      metric = "ROC",
+      method = "rf",
+      importance = T,
+      proximity = F,
+      ntree = 1000,
+      tuneGrid = data.frame(.mtry = expand.grid(.mtry = mtrys)),
+      trControl = tc,
+      data = train_dead
     )
+)
+mtrys <- turn.rf$bestTune$mtry
+
+save(
+  list = c(
+    "rf.time.cv", "mtrys", "tc", "turn.rf", "mtrys"
+  ),
+  file = ifelse(
+    choice == "train", "./output/rfcv.Rda", "./output/rfcv_robust.Rda"
   )
-}
+)
 
 stopCluster(mc)
 print("Random forest cross-validation complete.")

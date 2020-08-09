@@ -15,6 +15,7 @@ library(xtable)
 library(aod)
 library(ggplot2)
 library(lme4)
+library(descr)
 
 # Sets working directory
 setwd("/Users/User/Documents/Surgical Risk Calculator SURF")

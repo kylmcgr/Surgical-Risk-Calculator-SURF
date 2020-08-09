@@ -4,6 +4,8 @@
 # This file generates latex code for a table of outcomes: outcomes.tex
 # Kyle McGraw, July 2019
 
+library(xtable)
+library(tibble)
 
 ### Import Data ###
 load("./data/grouped_outcomes_puf16.Rda")

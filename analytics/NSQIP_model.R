@@ -88,8 +88,10 @@ testdata <- transmute(newdata,
 
 #### Models ####
 
+file.create(paste0("./tables/", "NSQIP_model.tex"))
+
 # Creates models for all outcomes and saves the predictions on test data
-outcome_names <- c("y_discharge", "y_dead", "y_reop", "y_related_reop", "y_readmit", "y_related_readmit", "y_sup_ssi", "y_deep_ssi", "y_organ_ssi", "y_wound_disruption", "y_pneumonia", "y_unplanned_intubation", "y_emb", "y_vent", "y_PRF", "y_ARF", "y_uti", "y_stroke", "y_cpr", "y_mi", "y_trans", "y_thromb", "y_sepsis", "y_sepshock", "y_cdiff")
+outcome_names <- c("y_any", "y_discharge", "y_dead", "y_reop", "y_readmit", "y_sup_ssi", "y_deep_ssi", "y_organ_ssi", "y_wound_disruption", "y_pneumonia", "y_unplanned_intubation", "y_emb", "y_vent", "y_PRF", "y_ARF", "y_uti", "y_stroke", "y_cpr", "y_mi", "y_trans", "y_thromb", "y_sepsis", "y_sepshock", "y_cdiff")
 for (i in outcome_names){
   y_var <- grouped_outcomes_puf18[[i]]
   
@@ -102,9 +104,19 @@ for (i in outcome_names){
                       Renal_fail_y + Dialysis_y + Diss_cancer_y + Chronic_steroid_y + Sepsis_sepsis + Sepsis_shock + 
                       Sepsis_sirs + Emergency_y + ASA_mild + ASA_severe + ASA_life + ASA_moribund + ASA_none,
                    data = y_frame, family = "binomial")
-  print(i)
-  print(summary(NSQIP_var), paste0("./tables/", "NSQIP_", i, ".txt"))
-
+  # print(i)
+  # print(xtable(summary(NSQIP_var)$coefficients, caption = paste0("NSQIP model coefficients for ", i), type = "latex"), file = paste0("./tables/", "NSQIP_", i, ".tex"))
+  temp_table <- capture.output(print(xtable(summary(NSQIP_var)$coefficients, caption = paste0("NSQIP model coefficients for ", i), type = "latex")))
+  
+  # Edits the latex code to import nicely into latex
+  temp_table <- gsub("\\\\begin\\{table\\}\\[ht\\]", "\\\\bigskip\\\\bigskip", temp_table)
+  temp_table <- gsub("\\\\end\\{table\\}", "", temp_table)
+  temp_table <- gsub("\\\\caption\\{", "\\\\captionof\\{table\\}\\{", temp_table)
+  temp_table <- gsub("_", "-", temp_table)
+  
+  # Append latex code to file
+  write(temp_table, file = paste0("./tables/", "NSQIP_model.tex"), append = TRUE)
+  
   NSQIP_var <- predict(NSQIP_var, testdata, type="response")
   pdf(paste0("./figures/", "NSQIP_", i, ".pdf"))
   plot(NSQIP_var)

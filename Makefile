@@ -1,52 +1,68 @@
-all: data cv analysis fig
-data: data.Rout
-cv: output/ffcv.Rout output/rfcv.Rout
-analysis: output/main.Rout
-fig: figures/varimp.Rout tables/perf.Rout figures/screen.Rout
+all: processing tables models
+processing: data_processing outcome_grouping
+tables: data_quality demographics
+models: simple NSQIP
 
-## Make subdirectories
-MKDIR_P := mkdir -p
-OUT_DIR := figures output tables ## data
-.PHONY: subdirs $(OUT_DIR)
-$(OUT_DIR):
-	${MKDIR_P} $(OUT_DIR)
+data_processing: data_processing16 data_processing17 data_processing18
+outcome_grouping: outcome_grouping16 outcome_grouping17 outcome_grouping18
+data_quality: data_quality16 data_quality17 data_quality18
+demographics: demographics_by_year outcomes_by_year surgery_by_year
 
-## Created by make data
-data_output = data/turnout.Rda
-## Created by make analysis
-main_output = output/turn.logit.Rda \
-output/turn.cart.Rda \
-output/turn.rf.Rda \
-output/turn.ff.Rda \
-output/turn.logit_robust.Rda \
-output/turn.cart_robust.Rda \
-output/turn.rf_robust.Rda \
-output/turn.ff_robust.Rda
+## Created by make data_processing
+pred_puf16 = data/pred_puf16.Rda
+pred_puf17 = data/pred_puf17.Rda
+pred_puf18 = data/pred_puf18.Rda
+outcomes_puf16 = data/outcomes_puf16.Rda
+outcomes_puf17 = data/outcomes_puf17.Rda
+outcomes_puf18 = data/outcomes_puf18.Rda
+outcome_grouping16 = data/grouped_outcomes_puf16.Rda
+outcome_grouping17 = data/grouped_outcomes_puf17.Rda
+outcome_grouping18 = data/grouped_outcomes_puf18.Rda
+
 
 ## Individual scripts
-data.Rout: fuzzy_forest_utility.R
-	Rscript data.R
-output/rfcv.Rout: $(data_output)
-	@mkdir -p $(@D)
-	Rscript rfcv.R
-output/ffcv.Rout: $(data_output)
-	Rscript ffcv.R
-output/main.Rout: $(data_output)
-	Rscript main.R
-figures/varimp.Rout: $(data_output) $(main_output)
-	Rscript varimp.R
-tables/perf.Rout: $(data_output) $(main_output)
-	Rscript perf.R
-figures/screen.Rout: $(data_output) $(outsample_output)
-	Rscript screen.R
+data_processing16 outcomes_puf16: data/acs_nsqip_puf16.txt
+	Rscript data-processing/data_processing_puf16.R
+data_processing17 outcomes_puf17: data/acs_nsqip_puf17.txt
+	Rscript data-processing/data_processing_puf17.R
+data_processing18 outcomes_puf18: data/acs_nsqip_puf18.txt
+	Rscript data-processing/data_processing_puf18.R
 
-## If zipping of the data file or the Rda outputs desired
-data.zip:
-	zip $@ data/*.tab
-rep.zip:
-	zip $@ output/*.Rda
+outcome_grouping16: $(outcomes_puf16)
+	Rscript data-processing/outcome_grouping_puf16.R
+outcome_grouping17: $(outcomes_puf17)
+	Rscript data-processing/outcome_grouping_puf17.R
+outcome_grouping18: $(outcomes_puf18)
+	Rscript data-processing/outcome_grouping_puf18.R
+
+data_quality16: $(pred_puf16) $(outcomes_puf16) data/acs_nsqip_puf16.txt
+	Rscript analytics/data_quality_testing_puf16.R
+data_quality17: $(pred_puf17) $(outcomes_puf17) data/acs_nsqip_puf17.txt
+	Rscript analytics/data_quality_testing_puf17.R
+data_quality18: $(pred_puf18) $(outcomes_puf18) data/acs_nsqip_puf18.txt
+	Rscript analytics/data_quality_testing_puf18.R
+
+demographics_by_year: $(pred_puf16) $(pred_puf17) $(pred_puf18)
+	Rscript analytics/demographics_by_year.R
+outcomes_by_year: $(outcome_grouping16) $(outcome_grouping17) $(outcome_grouping18)
+	Rscript analytics/outcomes_by_year.R
+surgery_by_year: $(pred_puf16) $(pred_puf17) $(pred_puf18)
+	Rscript analytics/surgery_by_year.R
+
+simple: $(pred_puf18) $(outcome_grouping18)
+	Rscript analytics/simple_models.R
+NSQIP: $(pred_puf18) $(outcome_grouping18)
+	Rscript analytics/NSQIP_model.R
+
+	#
+	# library(dplyr)
+	# library(data.table)
+	# library(xtable)
+	# library(aod)
+	# library(ggplot2)
+	# library(lme4)
+	# library(descr)
 
 ## Clean directory of R outputs
-clean_all:
-	find . | egrep ".*((\.(Rda|RData|Rout|Rhistory))|~)$$" | xargs rm
-	rm -rf auto
+clean:
+	find . | egrep ".*((\.(Rda|RData|Rout|Rhistory|pdf|tex))|~)$$" | xargs rm

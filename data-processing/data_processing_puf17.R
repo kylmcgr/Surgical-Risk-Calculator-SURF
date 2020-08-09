@@ -3,6 +3,7 @@
 # The output of this file is pred_puf17 (a data table of predictors) and outcomes_puf17 (a data table of outcomes).
 # Kyle McGraw, July 2019
 
+library(dplyr)
 
 #### Import Data ####
 datatrain_puf17 <- read.csv(paste0("./data/", "acs_nsqip_puf17.txt"), sep="\t", header = TRUE, stringsAsFactors = FALSE)

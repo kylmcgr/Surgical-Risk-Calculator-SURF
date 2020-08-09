@@ -4,11 +4,14 @@
 # This file generates latex code for a table of the number of a surgery type: surgery.tex
 # Kyle McGraw, July 2019
 
+library(dplyr)
+library(tibble)
+library(xtable)
 
 ### Import Data ###
-load("./data/pred_puf16.csv")
-load("./data/pred_puf17.csv")
-load("./data/pred_puf18.csv")
+load("./data/pred_puf16.Rda")
+load("./data/pred_puf17.Rda")
+load("./data/pred_puf18.Rda")
 
 
 #### Demographics by Year ####
@@ -36,7 +39,7 @@ total18 <- nrow(surg_pred18)
 
 # List of variable names to be used and labels for each variable in the table
 surg_names <- c("CPT_plastic", "surgery_plastic", "plastics_both")
-surg_labels <- c("CPT Plastic", "Surgery Speciality Plastic", "Both CPT and Surgery Speciality Plastic")
+surg_labels <- c("CPT Plastic", "Surgery Specialty Plastic", "Both CPT and Surgery Specialty Plastic")
 
 # Adds each variable as a number and as a percentage
 for (i in surg_names){
@@ -54,7 +57,24 @@ row.names(surg) <- surg_labels
 print(xtable(surg, caption = "Plastic Surgery", type = "latex"), file = paste0("./tables/", "surgery.tex"))
 
 # test out cross tab
-library(gmodels)
-print(summary(CrossTable(new_pred16[["CPT_plastic"]], new_pred16[["surgery_plastic"]]), latex=TRUE), file = paste0("./tables/", "surgery16.tex"))
-print(summary(CrossTable(new_pred17[["CPT_plastic"]], new_pred17[["surgery_plastic"]]), latex=TRUE), file = paste0("./tables/", "surgery17.tex"))
-print(summary(CrossTable(new_pred18[["CPT_plastic"]], new_pred18[["surgery_plastic"]]), latex=TRUE), file = paste0("./tables/", "surgery18.tex"))
+print(xtable(CrossTable(new_pred16[["CPT_plastic"]], new_pred16[["surgery_plastic"]]), caption = "2016 Cross Table", type = "latex"), file = paste0("./tables/", "surgery16.tex"))
+print(xtable(CrossTable(new_pred17[["CPT_plastic"]], new_pred17[["surgery_plastic"]]), caption = "2017 Cross Table", type = "latex"), file = paste0("./tables/", "surgery17.tex"))
+print(xtable(CrossTable(new_pred18[["CPT_plastic"]], new_pred18[["surgery_plastic"]]), caption = "2018 Cross Table", type = "latex"), file = paste0("./tables/", "surgery18.tex"))
+
+pre16 <- read.csv(paste0("./data/", "acs_nsqip_puf16.txt"), sep="\t", header = TRUE, stringsAsFactors = FALSE)
+
+surgeryplastic16_yescpts <- filter(pred_puf16, surgery_plastic == 1)
+print(xtable(t(data.frame(sort(unique(surgeryplastic16_yescpts[["cpt"]])))), caption = "CPTs in Surgery Specialty Plastic", type = "latex"), file = paste0("./tables/", "specialtyplastic.tex"))
+
+
+surgeryplastic16_nocpts <- filter(pred_puf16, surgery_plastic == 1, CPT_plastic == 0)
+print(xtable(t(data.frame(sort(unique(surgeryplastic16_nocpts[["cpt"]])))), caption = "CPTs in Surgery Specialty Plastic (without given CPTs)", type = "latex"), file = paste0("./tables/", "specialtyplasticnocpts.tex"))
+
+plastic16 <- filter(pre16, CPT == 19318 | CPT == 19324 | CPT == 19325 |
+                      CPT == 19340 | CPT == 19342 | CPT == 19357 |
+                      CPT == 19361 | CPT == 19364 | CPT == 19366 |
+                      CPT == 19367 | CPT == 19368 | CPT == 19369 |
+                      CPT == 19370 | CPT == 19371 | CPT == 19380)
+
+print(xtable(table(plastic16[["SURGSPEC"]]), caption = "Surgery Specialties of Plastic Surgery CPTs", type = "latex"), file = paste0("./tables/", "CPTplastic.tex"))
+

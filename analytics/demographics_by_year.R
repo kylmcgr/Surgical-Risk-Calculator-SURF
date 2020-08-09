@@ -4,6 +4,9 @@
 # This file generates latex code for a table of demographics: demographics.tex
 # Kyle McGraw, July 2019
 
+library(dplyr)
+library(tibble)
+library(xtable)
 
 ### Import Data ###
 load("./data/pred_puf16.Rda")

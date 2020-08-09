@@ -6,6 +6,8 @@
 # pred_sum_testing_puf17, outcome_sum_testing_puf17
 # Kyle McGraw, July 2019
 
+library(dplyr)
+library(xtable)
 
 ### Import Data ###
 load("./data/pred_puf17.Rda")

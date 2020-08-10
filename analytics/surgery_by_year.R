@@ -7,6 +7,7 @@
 library(dplyr)
 library(tibble)
 library(xtable)
+library(gmodels)
 
 ### Import Data ###
 load("./data/pred_puf16.Rda")
@@ -57,9 +58,9 @@ row.names(surg) <- surg_labels
 print(xtable(surg, caption = "Plastic Surgery", type = "latex"), file = paste0("./tables/", "surgery.tex"))
 
 # test out cross tab
-print(xtable(CrossTable(new_pred16[["CPT_plastic"]], new_pred16[["surgery_plastic"]]), caption = "2016 Cross Table", type = "latex"), file = paste0("./tables/", "surgery16.tex"))
-print(xtable(CrossTable(new_pred17[["CPT_plastic"]], new_pred17[["surgery_plastic"]]), caption = "2017 Cross Table", type = "latex"), file = paste0("./tables/", "surgery17.tex"))
-print(xtable(CrossTable(new_pred18[["CPT_plastic"]], new_pred18[["surgery_plastic"]]), caption = "2018 Cross Table", type = "latex"), file = paste0("./tables/", "surgery18.tex"))
+print(xtable(CrossTable(pred_puf16[["CPT_plastic"]], pred_puf16[["surgery_plastic"]]), caption = "2016 Cross Table", type = "latex"), file = paste0("./tables/", "surgery16.tex"))
+print(xtable(CrossTable(pred_puf16[["CPT_plastic"]], pred_puf16[["surgery_plastic"]]), caption = "2017 Cross Table", type = "latex"), file = paste0("./tables/", "surgery17.tex"))
+print(xtable(CrossTable(pred_puf16[["CPT_plastic"]], pred_puf16[["surgery_plastic"]]), caption = "2018 Cross Table", type = "latex"), file = paste0("./tables/", "surgery18.tex"))
 
 pre16 <- read.csv(paste0("./data/", "acs_nsqip_puf16.txt"), sep="\t", header = TRUE, stringsAsFactors = FALSE)
 

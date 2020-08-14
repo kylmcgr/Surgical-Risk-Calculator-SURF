@@ -5,7 +5,8 @@
 # predictor individually for each outcome
 # Kyle McGraw, July 2019
 
-
+library(dplyr)
+library(xtable)
 
 ### Setup Data ###
 load("./data/pred_puf18.Rda")

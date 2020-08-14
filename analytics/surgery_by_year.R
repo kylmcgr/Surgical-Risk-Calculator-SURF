@@ -7,7 +7,7 @@
 library(dplyr)
 library(tibble)
 library(xtable)
-library(gmodels)
+library(descr)
 
 ### Import Data ###
 load("./data/pred_puf16.Rda")

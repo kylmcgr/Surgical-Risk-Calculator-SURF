@@ -96,11 +96,24 @@ grouped_outcomes_puf17 <- transmute(outcomes_puf17,
                             y_cdiff = if_else(cdiff_y == 1 | num_cdiff >= 1 | days_cdiff >= 0, 1, 0),
                             
                             # Sum of Outcomes
-                            y_all = y_discharge +y_dead + y_reop + y_readmit + y_sup_ssi + y_deep_ssi + y_organ_ssi + 
-                              y_wound_disruption + y_pneumonia + y_unplanned_intubation + y_emb + y_vent + y_PRF + 
-                              y_ARF + y_uti + y_stroke + y_cpr + y_mi + y_trans + y_thromb + y_sepsis + y_sepshock + y_cdiff,
+                            y_all = y_sup_ssi + y_deep_ssi + y_organ_ssi + y_wound_disruption + y_pneumonia + 
+                              y_unplanned_intubation + y_emb + y_thromb + y_vent + y_PRF + y_ARF + y_uti + y_stroke + 
+                              y_cpr + y_mi + y_reop + y_sepsis,
                             
                             y_any = if_else(y_all > 0, 1, 0),
+                            
+                            y_serious_sum = y_cpr + y_mi + y_pneumonia + y_PRF + y_ARF + y_emb + y_thromb + y_reop + 
+                              y_deep_ssi + y_organ_ssi + y_sepsis + y_unplanned_intubation + y_uti + y_wound_disruption,
+                            
+                            y_serious = if_else(y_serious_sum > 0, 1, 0),
+                            
+                            y_cardiac = if_else(y_cpr + y_mi > 0, 1, 0),
+                            
+                            y_SSI = if_else(y_sup_ssi + y_deep_ssi + y_organ_ssi > 0, 1, 0),
+                            
+                            y_renal = if_else(y_PRF + y_ARF > 0, 1, 0),
+                            
+                            y_discharge_care = if_else(discharge_skilled + discharge_unskilled + discharge_rehab + discharge_acute > 0, 1, 0),
 )
 
 # Export R Object

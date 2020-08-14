@@ -26,8 +26,7 @@ datatrain_puf17[datatrain_puf17 == "90+"] = 90
 
 
 #### Predictor Processing ####
-# Many NAs are not dealt with yet
-# NAs in outcomes variables with days are turned into -1 for outcome grouping
+# NAs are coded as -1
 # for categorical predictors, NAs not put in a category
 
 pred_puf17 <- transmute(datatrain_puf17,
@@ -50,7 +49,7 @@ pred_puf17 <- transmute(datatrain_puf17,
                         hispanic_u = if_else(ETHNICITY_HISPANIC == "Unknown", 1, 0,missing=0),
                         
                         # CPT number
-                        cpt = as.numeric(CPT),
+                        cpt = if_else(is.na(CPT), -1, as.numeric(CPT),missing=-1),
                         CPT_plastic = (CPT == 19318 | CPT == 19324 | CPT == 19325 |
                                          CPT == 19340 | CPT == 19342 | CPT == 19357 |
                                          CPT == 19361 | CPT == 19364 | CPT == 19366 |
@@ -73,11 +72,11 @@ pred_puf17 <- transmute(datatrain_puf17,
                         trans_chronic_inter = if_else(TRANST == "Chronic Care - Intermediate care", 1, 0,missing=0),
                         
                         # Age
-                        patient_age = as.numeric(Age),
+                        patient_age = if_else(is.na(Age), -1, as.numeric(Age),missing=-1),
                         # Year of Admission
-                        admit_year = as.numeric(AdmYR),
+                        admit_year = if_else(is.na(AdmYR), -1, as.numeric(AdmYR),missing=-1),
                         # Year of Operation
-                        operation_year = as.numeric(OperYR),
+                        operation_year = if_else(is.na(OperYR), -1, as.numeric(OperYR),missing=-1),
                         
                         # Principal Anesthesia Technique
                         anesth_epi = if_else(ANESTHES == "Epidural", 1, 0,missing=0),
@@ -110,12 +109,11 @@ pred_puf17 <- transmute(datatrain_puf17,
                         elective_n = if_else(ELECTSURG == "0", 1, 0,missing=0),
                         elective_u = if_else(ELECTSURG == "Unknown", 1, 0,missing=0),
                         
-                        # Height in inches
-                        patient_height = as.numeric(HEIGHT),
+                        patient_height = if_else(is.na(HEIGHT), -1, as.numeric(HEIGHT),missing=-1),
                         # Weight in lbs
-                        patient_weight = as.numeric(WEIGHT),
+                        patient_weight = if_else(is.na(WEIGHT), -1, as.numeric(WEIGHT),missing=-1),
                         # BMI calculated from height and weight
-                        BMI = round(703*(as.numeric(WEIGHT))/(as.numeric(HEIGHT)^2)),
+                        BMI = if_else(is.na(HEIGHT) | is.na(WEIGHT), -1, round(703*(as.numeric(WEIGHT))/(as.numeric(HEIGHT)^2)),missing=-1),
                         
                         # Diabetes
                         diabetes_no = if_else(DIABETES == "0", 1, 0,missing=0),
@@ -272,21 +270,20 @@ pred_puf17 <- transmute(datatrain_puf17,
                         ASA_none = if_else(ASACLAS == "None assigned", 1, 0,missing=0),
                         
                         # Estimated Probability of Mortality
-                        mortality = as.numeric(MORTPROB),
+                        mortality = if_else(is.na(MORTPROB), -1, as.numeric(MORTPROB),missing=-1),
                         # Estimated Probability of Morbidity
-                        morbidity = as.numeric(MORBPROB),
+                        morbidity = if_else(is.na(MORBPROB), -1, as.numeric(MORBPROB),missing=-1),
                         
                         #  Quarter of Admission
-                        admit_quarter = as.numeric(AdmQtr),
+                        admit_quarter = if_else(is.na(AdmQtr), -1, as.numeric(AdmQtr),missing=-1),
                         # Days from Hospital Admission to Operation
-                        days_to_opperation = as.numeric(HtoODay),
+                        days_to_opperation = if_else(is.na(HtoODay), -1, as.numeric(HtoODay),missing=-1),
                         
 )
 
 
 #### Outcome Processing ####
-# Many NAs are not dealt with yet
-# NAs in outcomes variables with days are turned into -1 for outcome grouping
+# NAs are coded as -1
 # for categorical predictors, NAs not put in a category
 
 outcomes_puf17 <- transmute(datatrain_puf17,
@@ -304,15 +301,13 @@ outcomes_puf17 <- transmute(datatrain_puf17,
                            discharge_hospice = if_else(DISCHDEST == "Hospice", 1, 0,missing=0),
                            
                            # Total operation time
-                           optime = as.numeric(OPTIME),
-                           # optime = if_else(is.na(OPTIME), -1, as.numeric(OPTIME),missing=-1),
+                           optime = if_else(is.na(OPTIME), -1, as.numeric(OPTIME),missing=-1),
                            # Hospital discharge Year
                            dicharge_year = if_else(is.na(HDISDT), 0, as.numeric(HDISDT),missing=0),
                            # Year of death
                            death_year = if_else(is.na(YRDEATH), 0, as.numeric(YRDEATH),missing=0),
                            # Length of total hospital stay 
-                           total_hosp_stay = as.numeric(TOTHLOS),
-                           # total_hosp_stay = if_else(is.na(TOTHLOS), -1, as.numeric(TOTHLOS),missing=-1),
+                           total_hosp_stay = if_else(is.na(TOTHLOS), -1, as.numeric(TOTHLOS),missing=-1),
                            
                            # Superficial Incisional SS
                            num_sup_ssi = if_else(is.na(NSUPINFEC), 0, as.numeric(NSUPINFEC),missing=0),
@@ -439,8 +434,8 @@ outcomes_puf17 <- transmute(datatrain_puf17,
                            days_sepshock = if_else(is.na(DOTHSESHOCK), -1, as.numeric(DOTHSESHOCK),missing=-1),
                            
                            # Post-op Diagnosis (ICD)
-                           postop_ICD9 = PODIAG,
-                           postop_ICD10 = PODIAG10,
+                           postop_ICD9 = if_else(is.na(PODIAG), "-1", PODIAG,missing="-1"),
+                           postop_ICD10 = if_else(is.na(PODIAG10), "-1", PODIAG10,missing="-1"),
                            
                            # Unplanned Reoperation
                            return_OR_y = if_else(RETURNOR == "Yes", 1, 0,missing=0),
@@ -460,20 +455,20 @@ outcomes_puf17 <- transmute(datatrain_puf17,
                            reop1_y = if_else(REOPERATION1 == "Yes", 1, 0,missing=0),
                            reop1_n = if_else(REOPERATION1 != "Yes", 1, 0,missing=0),
                            days_reop1 = if_else(is.na(RETORPODAYS), -1, as.numeric(RETORPODAYS),missing=-1),
-                           cpt_reop1 = REOPORCPT1,
+                           cpt_reop1 = if_else(is.na(REOPORCPT1), "-1", REOPORCPT1,missing="-1"),
                            related_reop1_y = if_else(RETORRELATED == "Yes", 1, 0,missing=0),
                            related_reop1_n = if_else(RETORRELATED != "Yes", 1, 0,missing=0),
-                           reop1_ICD9 = REOPORICD91,
-                           reop1_ICD10 = REOPOR1ICD101,
+                           reop1_ICD9 = if_else(is.na(REOPORICD91), "-1", REOPORICD91,missing="-1"),
+                           reop1_ICD10 = if_else(is.na(REOPOR1ICD101), "-1", REOPOR1ICD101,missing="-1"),
                            
                            reop2_y = if_else(REOPERATION2 == "Yes", 1, 0,missing=0),
                            reop2_n = if_else(REOPERATION2 != "Yes", 1, 0,missing=0),
                            days_reop2 = if_else(is.na(RETOR2PODAYS), -1, as.numeric(RETOR2PODAYS),missing=-1),
-                           cpt_reop2 = REOPOR2CPT1,
+                           cpt_reop2 = if_else(is.na(REOPOR2CPT1), "-1", REOPOR2CPT1,missing="-1"),
                            related_reop2_y = if_else(RETOR2RELATED == "Yes", 1, 0,missing=0),
                            related_reop2_n = if_else(RETOR2RELATED != "Yes", 1, 0,missing=0),
-                           reop2_ICD9 = REOPOR2ICD91,
-                           reop2_ICD10 = REOPOR2ICD101,
+                           reop2_ICD9 = if_else(is.na(REOPOR2ICD91), "-1", REOPOR2ICD91,missing="-1"),
+                           reop2_ICD10 = if_else(is.na(REOPOR2ICD101), "-1", REOPOR2ICD101,missing="-1"),
                            
                            reop3plus_y = if_else(REOPERATION3 == "Yes", 1, 0,missing=0),
                            reop3plus_n = if_else(REOPERATION3 != "Yes", 1, 0,missing=0),
@@ -526,8 +521,8 @@ outcomes_puf17 <- transmute(datatrain_puf17,
                            
                            
                            # Other Post-op Occurrence (ICD)
-                           postop_ICD9 = PODIAG_OTHER,
-                           postop_ICD10 = PODIAG_OTHER10,
+                           postop_ICD9 = if_else(is.na(PODIAG_OTHER), "-1", PODIAG_OTHER,missing="-1"),
+                           postop_ICD10 = if_else(is.na(PODIAG_OTHER10), "-1", PODIAG_OTHER10,missing="-1"),
                            
                            #  Clostridium Difficile (C.diff) Colitis
                            cdiff_y = if_else(OTHCDIFF == "C. diff", 1, 0,missing=0),

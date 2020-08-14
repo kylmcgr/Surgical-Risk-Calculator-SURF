@@ -67,3 +67,29 @@ row.names(demo) <- demo_labels
 
 # Export latex code to file
 print(xtable(demo, caption = "Demographics by Year", type = "latex"), file = paste0("./tables/", "demographics.tex"))
+
+
+#### Demographics by Year for Plastic Surgery ####
+
+# Creates an empty data frame with years as columns
+plastic <- data.frame(matrix(ncol = 3, nrow = 0))
+x <- c("2016", "2017", "2018")
+colnames(plastic) <- x
+
+plastics16 <- filter(new_pred16, CPT_plastic == 1)
+plastics17 <- filter(new_pred17, CPT_plastic == 1)
+plastics18 <- filter(new_pred18, CPT_plastic == 1)
+
+for (i in demo_names){
+  tble16 <- table(plastics16[[i]])
+  tble17 <- table(plastics17[[i]])
+  tble18 <- table(plastics18[[i]])
+  plastic <- add_row(plastic, "2016" = tble16[2], "2017" = tble17[2], "2018" = tble18[2])
+}
+
+# Adds row names
+plastic_labels <- c("Male", "Female", "Age 18-24", "Age 25-35", "Age 36-50", "Age 51-65", "Age 66+", "Race Asian", "Race Black", "Race Native American", "Race Pacific Islander", "Race White", "Race Unknown", "Hispanic", "Not Hispanic", "Hispanic Unknown")
+row.names(plastic) <- plastic_labels
+
+# Export latex code to file
+print(xtable(plastic, caption = "Demographics by Year for Plastic Surgery", type = "latex"), file = paste0("./tables/", "plastics_demographics.tex"))

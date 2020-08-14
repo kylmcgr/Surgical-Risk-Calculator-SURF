@@ -37,3 +37,37 @@ row.names(outcomes) <- outcome_labels
 
 # Export latex code to file
 print(xtable(outcomes, caption = "Outcomes by Year", type = "latex"), file = paste0("./tables/", "outcomes.tex"))
+
+
+### Import Data ###
+load("./data/pred_puf16.Rda")
+load("./data/pred_puf17.Rda")
+load("./data/pred_puf18.Rda")
+
+
+#### Outcomes by Year for Plastic Surgery ####
+
+total16 <- mutate(grouped_outcomes_puf16, CPT_plastic = pred_puf16[["CPT_plastic"]])
+total17 <- mutate(grouped_outcomes_puf17, CPT_plastic = pred_puf17[["CPT_plastic"]])
+total18 <- mutate(grouped_outcomes_puf18, CPT_plastic = pred_puf18[["CPT_plastic"]])
+plastics16 <- filter(total16, CPT_plastic == 1)
+plastics17 <- filter(total17, CPT_plastic == 1)
+plastics18 <- filter(total18, CPT_plastic == 1)
+
+# Creates an empty data frame with years as columns
+plastic <- data.frame(matrix(ncol = 3, nrow = 0))
+x <- c("2016", "2017", "2018")
+colnames(plastic) <- x
+
+for (i in outcome_names){
+  tble16 <- table(plastics16[[i]])
+  tble17 <- table(plastics17[[i]])
+  tble18 <- table(plastics18[[i]])
+  plastic <- add_row(plastic, "2016" = tble16[2], "2017" = tble17[2], "2018" = tble18[2])
+}
+
+# Adds row names
+row.names(plastic) <- outcome_labels
+
+# Export latex code to file
+print(xtable(plastic, caption = "Outcomes by Year for Plastic Surgery", type = "latex"), file = paste0("./tables/", "plastics_outcomes.tex"))

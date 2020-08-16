@@ -4,6 +4,7 @@
 # This file generates latex code for a table of outcomes: outcomes.tex
 # Kyle McGraw, July 2019
 
+library(dplyr)
 library(xtable)
 library(tibble)
 

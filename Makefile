@@ -1,7 +1,7 @@
 all: processing tables models
 processing: data_processing outcome_grouping
 tables: data_quality demographics
-models: simple NSQIP rf
+models: rf ff
 
 data_processing: data_processing16 data_processing17 data_processing18
 outcome_grouping: outcome_grouping16 outcome_grouping17 outcome_grouping18
@@ -55,6 +55,8 @@ NSQIP: $(pred_puf18) $(outcome_grouping18)
 	Rscript analytics/NSQIP_model.R
 rf: $(pred_puf16) $(outcome_grouping16)
 	Rscript analytics/rf.R
+ff: $(pred_puf16) $(outcome_grouping16)
+	Rscript analytics/ff.R
 
 ## Clean directory of R outputs
 clean:

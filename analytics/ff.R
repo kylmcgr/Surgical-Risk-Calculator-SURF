@@ -5,15 +5,9 @@ library(ROCR)
 library(WGCNA)
 library(fuzzyforest)
 
-cl <- parallel::detectCores() / 2
-mc <- makeCluster(cl)
-registerDoParallel(mc)
-
 ### Setup Data ###
 load("./data/pred_puf16.Rda")
 load("./data/grouped_outcomes_puf16.Rda")
-# load("./data/pred_puf17.Rda")
-# load("./data/grouped_outcomes_puf17.Rda")
 
 
 ff_params <- function(controls, fxn) {
@@ -36,9 +30,16 @@ ff_params <- function(controls, fxn) {
   return(list(screen_params = screen_params, select_params = select_params))
 }
 
-outcome_names <- c("y_serious", "y_any", "y_pneumonia", "y_cardiac", "y_SSI", "y_uti", "y_thromb", "y_renal", "y_readmit", "y_reop", "y_dead", "y_discharge_care", "y_sepsis")
+
+# took out because error, "y_cardiac", "y_renal", "y_dead"
+outcome_names <- c("y_serious", "y_any", "y_pneumonia", "y_SSI", "y_uti", "y_thromb", "y_readmit", "y_reop", "y_discharge_care", "y_sepsis")
 for (outcome in outcome_names){
-    
+  print(outcome)
+  
+  cl <- parallel::detectCores() / 2
+  mc <- makeCluster(cl)
+  registerDoParallel(mc)
+  
   train <- mutate(pred_puf16, y_var = as.factor(grouped_outcomes_puf16[[outcome]]))
   levels(train$y_var) <- c("no_outcome", "outcome")
   plastic_train = filter(train, CPT_plastic == 1)
@@ -97,7 +98,7 @@ for (outcome in outcome_names){
         minModuleSize = controls$minModuleSize[i],
         nThreads = controls$nThreads[i]
       )
-      print(paste0("Module calculated: spec. ", i, ", ", j, "-th iter."))
+      # print(paste0("Module calculated: spec. ", i, ", ", j, "-th iter."))
       model.ff <-
         ff(
           X, y,
@@ -107,10 +108,10 @@ for (outcome in outcome_names){
           select_params = param_list$select_params,
           final_ntree = controls$final_ntree[i]
         )
-      print(paste0("ff complete: spec. ", i, ", ", j, "-th iter."))
+      # print(paste0("ff complete: spec. ", i, ", ", j, "-th iter."))
       ## Metric is ROC (i.e., AUC) 
       ff_predict <- predict(model.ff$final_rf, newdata = X_test, type = "prob")
-      ff_rocr <- prediction(ff_predict[, i], y_test)
+      ff_rocr <- prediction(ff_predict[, 2], y_test)
       ff_auc <- performance(ff_rocr, "auc")
       ## Store output 
       output[[j]] <-
@@ -124,7 +125,7 @@ for (outcome in outcome_names){
     ## Average performance?
     cv_perf_ff[[i]] <-
       unlist(lapply(output, function(x) x$ff_auc@y.values[[1]]))
-    print(cv_perf_ff[[i]])
+    # print(cv_perf_ff[[i]])
   }
   
   # Final choice of models =====================================================
@@ -134,12 +135,35 @@ for (outcome in outcome_names){
   ## In the rare case that there are 2+ specifications with same max level
   if (length(final_choice_ff) > 1) final_choice_ff = max(final_choice_ff)
   
+  ff_X <- select(plastic_train, -y_var)
+  ff_controls <- controls[final_choice_ff, ]
+  param_list <- ff_params(controls, final_choice_ff)
+  
+  module <- blockwiseModules(
+    ff_X,
+    power = ff_controls$power,
+    minModuleSize = ff_controls$minModuleSize,
+    nThreads = ff_controls$nThreads
+  )
+  
+  ff.time <- system.time(
+    plastic.ff <-
+      ff(ff_X, plastic_train$y_var,
+         module_membership = module$colors,
+         num_processors = cl,
+         screen_params = param_list$screen_params,
+         select_params = param_list$select_params,
+         final_ntree = ff_controls$final_ntree
+      )
+  )
+  
   save(
     list = c(
-      "controls", "cv_index", "cv_perf_ff", "final_choice_ff"
+      "ff.time", "plastic.ff", "controls", "cv_index", "cv_perf_ff", "final_choice_ff"
     ),
-    file = paste0("./data/", i, "_ff.Rda")
+    file = paste0("./data/", outcome, "_ff.Rda")
   )
+  registerDoSEQ()
 }
 
 stopCluster(mc)

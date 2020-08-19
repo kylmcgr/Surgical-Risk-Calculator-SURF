@@ -9,8 +9,6 @@ registerDoParallel(mc)
 ### Setup Data ###
 load("./data/pred_puf16.Rda")
 load("./data/grouped_outcomes_puf16.Rda")
-# load("./data/pred_puf17.Rda")
-# load("./data/grouped_outcomes_puf17.Rda")
 
 outcome_names <- c("y_serious", "y_any", "y_pneumonia", "y_cardiac", "y_SSI", "y_uti", "y_thromb", "y_renal", "y_readmit", "y_reop", "y_dead", "y_discharge_care", "y_sepsis")
 for (i in outcome_names){
@@ -76,17 +74,3 @@ for (i in outcome_names){
   
 }
 stopCluster(mc)
-
-# library(pROC)
-# plot(plastic.rf)
-# 
-# pred <- predict(plastic.rf, plastic_test)
-# 
-# probs <- predict(plastic.rf, plastic_test,type="prob")
-# head(probs)
-# 
-# reop.ROC <- roc(predictor=probs$second_class,
-#                 response=plastic_test$y_var,
-#                 levels=rev(levels(plastic_test$y_var)))
-# reop.ROC$auc
-# plot(reop.ROC,main="Plastics Reop ROC")

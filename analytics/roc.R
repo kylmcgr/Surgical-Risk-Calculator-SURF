@@ -11,8 +11,8 @@ aucs <- data.frame(matrix(ncol = 3, nrow = 0))
 x <- c("rf", "ff", "logit")
 colnames(aucs) <- x
 
-# took out because error, "y_cardiac", "y_renal", "y_dead", "y_discharge_care", "y_sepsis"
-outcome_names <- c("y_serious", "y_any", "y_pneumonia", "y_SSI", "y_uti", "y_thromb", "y_readmit", "y_reop")
+# took out because error, "y_cardiac", "y_renal", "y_dead"
+outcome_names <- c("y_serious", "y_any", "y_pneumonia", "y_SSI", "y_uti", "y_thromb", "y_readmit", "y_reop", "y_discharge_care", "y_sepsis")
 for (outcome in outcome_names){
   print(outcome)
   test <- mutate(pred_puf17, y_var = as.factor(grouped_outcomes_puf17[[outcome]]))
@@ -50,7 +50,7 @@ for (outcome in outcome_names){
   
 }
   
-# , "Cardiac Complication", "Renal Failure", "Death", "Discharge to Nursing or Rehab Facility", "Sepsis"
-outcome_labels <- c("Serious Complication", "Any Complication", "Pneumonia", "Surgical Site Infection", "Urinary Tract Infection", "Venous Thromboembolism", "Readmission", "Return to OR")
+# , "Cardiac Complication", "Renal Failure", "Death"
+outcome_labels <- c("Serious Complication", "Any Complication", "Pneumonia", "Surgical Site Infection", "Urinary Tract Infection", "Venous Thromboembolism", "Readmission", "Return to OR", "Discharge to Nursing or Rehab Facility", "Sepsis")
 row.names(aucs) <- outcome_labels
 print(xtable(aucs, caption = "AUC by Model and Outcome for Plastic Surgery", type = "latex"), file = paste0("./tables/", "plastics_AUC.tex"))

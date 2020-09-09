@@ -60,6 +60,8 @@ plastic <- data.frame(matrix(ncol = 3, nrow = 0))
 x <- c("2016", "2017", "2018")
 colnames(plastic) <- x
 
+
+outcome_names <- c("y_serious", "y_any", "y_pneumonia", "y_SSI", "y_uti", "y_thromb", "y_readmit", "y_reop", "y_discharge_care", "y_sepsis", "y_cardiac", "y_renal", "y_dead")
 for (i in outcome_names){
   tble16 <- table(plastics16[[i]])
   tble17 <- table(plastics17[[i]])
@@ -68,6 +70,7 @@ for (i in outcome_names){
 }
 
 # Adds row names
+outcome_labels <- c("Serious Complication", "Any Complication", "Pneumonia", "Surgical Site Infection", "Urinary Tract Infection", "Venous Thromboembolism", "Readmission", "Return to OR", "Discharge to Nursing or Rehab Facility", "Sepsis", "Cardiac Complication", "Renal Failure", "Death")
 row.names(plastic) <- outcome_labels
 
 # Export latex code to file

@@ -1,24 +1,31 @@
+# This script creates random forest models for the NSQIP 2016 dataset
+# data_processing_puf16.R and outcome_grouping_puf16.R must be run prior to 
+# running the script for the pred_puf16 and grouped_outcomes_puf16 objects.
+# This code is adapted from https://github.com/sysilviakim/turnout2016
+# Kyle McGraw, August 2019
+
 library(caret)
 library(dplyr)
 library(doParallel)
 
+
+# Setup clusters
 cl <- parallel::detectCores() / 2
 mc <- makeCluster(cl)
 registerDoParallel(mc)
 
-### Setup Data ###
+# Load data
 load("./data/pred_puf16.Rda")
 load("./data/grouped_outcomes_puf16.Rda")
 
+# Creates models for outcomes and saves the models to file
 outcome_names <- c("y_serious", "y_any", "y_pneumonia", "y_cardiac", "y_SSI", "y_uti", "y_thromb", "y_renal", "y_readmit", "y_reop", "y_dead", "y_discharge_care", "y_sepsis")
 for (i in outcome_names){
   
+  # Selects plastic surgery data for specified outcome
   train <- mutate(pred_puf16, y_var = as.factor(grouped_outcomes_puf16[[i]]))
   levels(train$y_var) <- c("no_outcome", "outcome")
   plastic_train = filter(train, CPT_plastic == 1)
-  # test <- mutate(pred_puf17, y_var = as.factor(grouped_outcomes_puf17[[i]]))
-  # levels(test$y_var) <- c("no_outcome", "outcome")
-  # plastic_test = filter(test, CPT_plastic == 1)
   
   mtrys <-
     c(

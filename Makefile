@@ -1,7 +1,7 @@
 all: processing tables models
 processing: data_processing outcome_grouping
 tables: data_quality demographics
-models: rf ff
+models: rf ff logit roc
 
 data_processing: data_processing16 data_processing17 data_processing18
 outcome_grouping: outcome_grouping16 outcome_grouping17 outcome_grouping18
@@ -51,12 +51,16 @@ surgery_by_year: $(pred_puf16) $(pred_puf17) $(pred_puf18)
 
 simple: $(pred_puf18) $(outcome_grouping18)
 	Rscript analytics/simple_models.R
-NSQIP: $(pred_puf18) $(outcome_grouping18)
+NSQIP: $(pred_puf18) $(outcome_grouping18) $(pred_puf16) $(outcome_grouping16)
 	Rscript analytics/NSQIP_model.R
 rf: $(pred_puf16) $(outcome_grouping16)
 	Rscript analytics/rf.R
 ff: $(pred_puf16) $(outcome_grouping16)
 	Rscript analytics/ff.R
+logit: $(pred_puf16) $(outcome_grouping16)
+	Rscript analytics/logit.R
+roc: $(pred_puf17) $(outcome_grouping17)
+	Rscript analytics/roc.R
 
 ## Clean directory of R outputs
 clean:

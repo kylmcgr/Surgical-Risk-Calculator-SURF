@@ -10,6 +10,7 @@ library(dplyr)
 library(xtable)
 library(ROCR)
 library(fuzzyforest)
+library(gridExtra)
 
 # Load data
 load("./data/pred_puf17.Rda")
@@ -48,8 +49,12 @@ colnames(aucs) <- x
 # Creates ROC curves and AUC values for each model for each outcome
 # "y_cardiac", "y_renal", "y_dead", not enough cases for model
 outcome_names <- c("y_serious", "y_any", "y_pneumonia", "y_SSI", "y_uti", "y_thromb", "y_readmit", "y_reop", "y_discharge_care", "y_sepsis")
-for (outcome in outcome_names){
-  
+# , "Cardiac Complication", "Renal Failure", "Death"
+outcome_labels <- c("Serious Complication", "Any Complication", "Pneumonia", "Surgical Site Infection", "Urinary Tract Infection", "Venous Thromboembolism", "Readmission", "Return to OR", "Discharge to Nursing or Rehab Facility", "Sepsis")
+
+for (i in 1:length(outcome_names)){
+  outcome = outcome_names[i]
+  outcome_label = outcome_labels[i]
   # Selects plastic surgery data for specified outcome
   test <- mutate(pred_puf17, y_var = as.factor(grouped_outcomes_puf17[[outcome]]))
   levels(test$y_var) <- c("no_outcome", "outcome")
@@ -84,20 +89,26 @@ for (outcome in outcome_names){
   NSQIPlogit_perf <- performance(NSQIPlogit_rocr, "tpr", "fpr")
   
   aucs <- add_row(aucs, "rf" = rf_auc@y.values[[1]], "ff" = ff_auc@y.values[[1]], "logit" = logit_auc@y.values[[1]], "NSQIPlogit" = NSQIPlogit_auc@y.values[[1]])
-  
+
   pdf(paste0("./figures/", "ROC_", outcome, ".pdf"))
-  plot(rf_perf, col="red")
+  plot(NSQIPlogit_perf, main = outcome_label, col="orange")
+  plot(rf_perf, add = TRUE, col="red")
   plot(ff_perf, add = TRUE, col="blue")
   plot(logit_perf, add = TRUE, col="green")
-  plot(NSQIPlogit_perf, add = TRUE, col="orange")
-  legend("bottomright", c("rf", "ff", "logit", "NSQIPlogit"), lty=1, 
-         col = c("red", "blue", "green", "orange"), bty="n", inset=c(0.15,0.15))
+  legend("bottomright", c("NSQIP GLM", "Random Forest", "Fuzzy Forest", "Fuzzy Forest GLM"), lty=1,
+         col = c("orange", "red", "blue", "green"), bty="n", inset=c(0.15,0.15))
   dev.off()
   
+  # print(data.frame(summary(plastic.logit)$coefficients[,1]))
+  # print(plastic.ff$feature_list[, 1:2])
+  
+  pdf(paste0("./figures/", outcome, "_features.pdf"))
+  X <- data.frame(summary(plastic.logit)$coefficients[-1,1], filter(plastic.ff$feature_list, feature_name %in% row.names(summary(plastic.logit)$coefficients))[, 2])
+  colnames(X) <- c("GLM Coefficient", "FF Variable Importance")
+  grid.table(X)
+  dev.off()
 }
 
 # Saves table to latex
-# , "Cardiac Complication", "Renal Failure", "Death"
-outcome_labels <- c("Serious Complication", "Any Complication", "Pneumonia", "Surgical Site Infection", "Urinary Tract Infection", "Venous Thromboembolism", "Readmission", "Return to OR", "Discharge to Nursing or Rehab Facility", "Sepsis")
 row.names(aucs) <- outcome_labels
 print(xtable(aucs, caption = "AUC by Model and Outcome for Plastic Surgery", type = "latex"), file = paste0("./tables/", "plastics_AUC.tex"))

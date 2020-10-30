@@ -50,11 +50,22 @@ pred_puf17 <- transmute(datatrain_puf17,
                         
                         # CPT number
                         cpt = if_else(is.na(CPT), -1, as.numeric(CPT),missing=-1),
+                        # With additional codes
                         CPT_plastic = (CPT == 19318 | CPT == 19324 | CPT == 19325 |
                                          CPT == 19340 | CPT == 19342 | CPT == 19357 |
                                          CPT == 19361 | CPT == 19364 | CPT == 19366 |
                                          CPT == 19367 | CPT == 19368 | CPT == 19369 |
-                                         CPT == 19370 | CPT == 19371 | CPT == 19380),
+                                         CPT == 19370 | CPT == 19371 | CPT == 19380 | 
+                                         CPT == 19316 | CPT == 19300 | CPT == 19328 |
+                                         CPT == 19350),
+                        CPT_plastic_complex = (CPT == 19361 | CPT == 19364 | CPT == 19366 | 
+                                                 CPT == 19367 | CPT == 19368 | CPT == 19369),
+                        # First Run
+                        # CPT_plastic = (CPT == 19318 | CPT == 19324 | CPT == 19325 |
+                        #                  CPT == 19340 | CPT == 19342 | CPT == 19357 |
+                        #                  CPT == 19361 | CPT == 19364 | CPT == 19366 |
+                        #                  CPT == 19367 | CPT == 19368 | CPT == 19369 |
+                        #                  CPT == 19370 | CPT == 19371 | CPT == 19380),
                         
                         # In/Out-Patient Status
                         inpatient = if_else(INOUT == "Inpatient", 1, 0,missing=0),
@@ -270,9 +281,9 @@ pred_puf17 <- transmute(datatrain_puf17,
                         ASA_none = if_else(ASACLAS == "None assigned", 1, 0,missing=0),
                         
                         # Estimated Probability of Mortality
-                        mortality = if_else(is.na(MORTPROB), -1, as.numeric(MORTPROB),missing=-1),
+                        # mortality = if_else(is.na(MORTPROB), -1, as.numeric(MORTPROB),missing=-1),
                         # Estimated Probability of Morbidity
-                        morbidity = if_else(is.na(MORBPROB), -1, as.numeric(MORBPROB),missing=-1),
+                        # morbidity = if_else(is.na(MORBPROB), -1, as.numeric(MORBPROB),missing=-1),
                         
                         #  Quarter of Admission
                         admit_quarter = if_else(is.na(AdmQtr), -1, as.numeric(AdmQtr),missing=-1),

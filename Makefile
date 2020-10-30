@@ -1,7 +1,7 @@
 all: processing tables models
 processing: data_processing outcome_grouping
 tables: data_quality demographics
-models: rf ff logit roc
+models: NSQIP rf ff logit roc
 
 data_processing: data_processing16 data_processing17 data_processing18
 outcome_grouping: outcome_grouping16 outcome_grouping17 outcome_grouping18

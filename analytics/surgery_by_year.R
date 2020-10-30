@@ -15,7 +15,18 @@ load("./data/pred_puf17.Rda")
 load("./data/pred_puf18.Rda")
 
 
-#### Demographics by Year ####
+#### Surgery by Year ####
+CPT_Codes_2016 <- select(pred_puf16, cpt)
+CPT_Codes_2017 <- select(pred_puf17, cpt)
+CPT_Codes_2018 <- select(pred_puf18, cpt)
+
+table = data.frame(sort(table(CPT_Codes_2016), decreasing = TRUE)[1:20], sort(table(CPT_Codes_2017), decreasing = TRUE)[1:20], sort(table(CPT_Codes_2018), decreasing = TRUE)[1:20])
+
+# Export latex code to file
+print(xtable(table, caption = "Most Common CPTs by Year", type = "latex"), file = paste0("./tables/", "cpts.tex"))
+
+
+#### Plastic Surgery by Year ####
 
 # Creates an empty data frame with years as columns
 surg <- data.frame(matrix(ncol = 3, nrow = 0))

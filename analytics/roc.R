@@ -99,11 +99,15 @@ for (i in 1:length(outcome_names)){
          col = c("orange", "red", "blue", "green"), bty="n", inset=c(0.15,0.15))
   dev.off()
   
-  # print(data.frame(summary(plastic.logit)$coefficients[,1]))
-  # print(plastic.ff$feature_list[, 1:2])
+  print(data.frame(summary(plastic.logit)$coefficients[,1]))
+  print(plastic.ff$feature_list[, 1:2])
   
   pdf(paste0("./figures/", outcome, "_features.pdf"))
-  X <- data.frame(summary(plastic.logit)$coefficients[-1,1], filter(plastic.ff$feature_list, feature_name %in% row.names(summary(plastic.logit)$coefficients))[, 2])
+  if (nrow(data.frame(summary(plastic.logit)$coefficients[,1])) != nrow(plastic.ff$feature_list[, 1:2])) {
+    X <- data.frame(summary(plastic.logit)$coefficients[-1,1], plastic.ff$feature_list)
+  } else {
+    X <- data.frame(summary(plastic.logit)$coefficients[-1,1], filter(plastic.ff$feature_list, feature_name %in% row.names(summary(plastic.logit)$coefficients))[, 2])
+  }
   colnames(X) <- c("GLM Coefficient", "FF Variable Importance")
   grid.table(X)
   dev.off()

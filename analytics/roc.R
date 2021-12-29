@@ -99,18 +99,24 @@ for (i in 1:length(outcome_names)){
          col = c("orange", "red", "blue", "green"), bty="n", inset=c(0.15,0.15))
   dev.off()
   
-  print(data.frame(summary(plastic.logit)$coefficients[,1]))
-  print(plastic.ff$feature_list[, 1:2])
+  # print(summary(plastic.logit)$coefficients[-1,1])
+  # print(nrow(data.frame(summary(plastic.logit)$coefficients[,1])))
+  # print(plastic.ff$feature_list[2])
+  # print(nrow(plastic.ff$feature_list[, 1:2]))
+  # if (nrow(data.frame(summary(plastic.logit)$coefficients[,1])) > nrow(plastic.ff$feature_list[, 1:2])) {
+  #   print(data.frame(summary(plastic.logit)$coefficients[-1,1], plastic.ff$feature_list[2]))
+  # }
   
   pdf(paste0("./figures/", outcome, "_features.pdf"))
-  if (nrow(data.frame(summary(plastic.logit)$coefficients[,1])) != nrow(plastic.ff$feature_list[, 1:2])) {
-    X <- data.frame(summary(plastic.logit)$coefficients[-1,1], plastic.ff$feature_list)
+  if (nrow(data.frame(summary(plastic.logit)$coefficients[,1])) > nrow(plastic.ff$feature_list[, 1:2])) {
+    X <- data.frame(summary(plastic.logit)$coefficients[-1,1], plastic.ff$feature_list[2])
   } else {
-    X <- data.frame(summary(plastic.logit)$coefficients[-1,1], filter(plastic.ff$feature_list, feature_name %in% row.names(summary(plastic.logit)$coefficients))[, 2])
+    X <- data.frame(summary(plastic.logit)$coefficients[-1,1], filter(plastic.ff$feature_list[1:2], feature_name %in% row.names(summary(plastic.logit)$coefficients))[2])
   }
   colnames(X) <- c("GLM Coefficient", "FF Variable Importance")
   grid.table(X)
   dev.off()
+  write(print(xtable(X, caption = outcome, type = "latex")), file = paste0("./tables/", "feature_importance.tex"), append = TRUE)
 }
 
 # Saves table to latex

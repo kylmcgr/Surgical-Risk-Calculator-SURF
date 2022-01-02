@@ -1,6 +1,7 @@
 # This script processes the data from the NSQIP 2017 dataset
 # The NSQIP 2017 data set must first be acquired prior to running the script.
-# The output of this file is pred_puf17 (a data table of predictors) and outcomes_puf17 (a data table of outcomes).
+# The output of this file is preimpute_pred_puf17 (a data table of predictors)
+# and preimpute_outcomes_puf17 (a data table of outcomes).
 # Kyle McGraw, July 2019
 
 library(dplyr)
@@ -27,6 +28,7 @@ datatrain_puf17[datatrain_puf17 == "90+"] = 90
 
 #### Predictor Processing ####
 # NAs are coded as -1
+# NAs left and imputed
 # for categorical predictors, NAs not put in a category
 
 pred_puf17 <- transmute(datatrain_puf17,
@@ -295,6 +297,7 @@ pred_puf17 <- transmute(datatrain_puf17,
 
 #### Outcome Processing ####
 # NAs are coded as -1
+# NAs left and imputed
 # for categorical predictors, NAs not put in a category
 
 outcomes_puf17 <- transmute(datatrain_puf17,
@@ -544,5 +547,5 @@ outcomes_puf17 <- transmute(datatrain_puf17,
 
 
 #### Export R Objects ####
-save(pred_puf17, file = paste0("./data/", "pred_puf17.Rda"))
-save(outcomes_puf17, file = paste0("./data/", "outcomes_puf17.Rda"))
+save(pred_puf17, file = paste0("./data/", "preimpute_pred_puf17.Rda"))
+save(outcomes_puf17, file = paste0("./data/", "preimpute_outcomes_puf17.Rda"))

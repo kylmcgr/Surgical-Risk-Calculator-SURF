@@ -3,12 +3,18 @@ processing: data_processing outcome_grouping
 tables: data_quality demographics
 models: NSQIP rf ff logit roc
 
-data_processing: data_processing16 data_processing17 data_processing18
+data_processing: data_processing16 data_processing17 data_processing18 imputation
 outcome_grouping: outcome_grouping16 outcome_grouping17 outcome_grouping18
 data_quality: data_quality16 data_quality17 data_quality18
 demographics: demographics_by_year outcomes_by_year surgery_by_year
 
 ## Created by make data_processing
+preimpute_pred_puf16 = data/preimpute_pred_puf16.Rda
+preimpute_pred_puf17 = data/preimpute_pred_puf17.Rda
+preimpute_pred_puf18 = data/preimpute_pred_puf18.Rda
+preimpute_outcomes_puf16 = data/preimpute_outcomes_puf16.Rda
+preimpute_outcomes_puf17 = data/preimpute_outcomes_puf17.Rda
+preimpute_outcomes_puf18 = data/preimpute_outcomes_puf18.Rda
 pred_puf16 = data/pred_puf16.Rda
 pred_puf17 = data/pred_puf17.Rda
 pred_puf18 = data/pred_puf18.Rda
@@ -21,12 +27,15 @@ outcome_grouping18 = data/grouped_outcomes_puf18.Rda
 
 
 ## Individual scripts
-data_processing16 outcomes_puf16: data/acs_nsqip_puf16.txt
+data_processing16 data/preimpute_pred_puf16.Rda data/outcomes_puf16.Rda: data/acs_nsqip_puf16.txt
 	Rscript data-processing/data_processing_puf16.R
-data_processing17 outcomes_puf17: data/acs_nsqip_puf17.txt
+data_processing17 data/preimpute_pred_puf17.Rda data/outcomes_puf17.Rda: data/acs_nsqip_puf17.txt
 	Rscript data-processing/data_processing_puf17.R
-data_processing18 outcomes_puf18: data/acs_nsqip_puf18.txt
+data_processing18 data/preimpute_pred_puf18.Rda data/outcomes_puf18.Rda: data/acs_nsqip_puf18.txt
 	Rscript data-processing/data_processing_puf18.R
+
+imputation: $(preimpute_pred_puf16) $(preimpute_pred_puf17) $(preimpute_pred_puf18) $(preimpute_outcomes_puf16) $(preimpute_outcomes_puf17) $(preimpute_outcomes_puf18)
+	Rscript data-processing/imputation.R
 
 outcome_grouping16: $(outcomes_puf16)
 	Rscript data-processing/outcome_grouping_puf16.R

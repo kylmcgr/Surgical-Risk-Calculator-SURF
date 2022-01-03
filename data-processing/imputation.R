@@ -6,6 +6,7 @@
 # Kyle McGraw, July 2019
 
 library(simputation)
+library(dplyr)
 
 ### Import Data ###
 load("./data/preimpute_pred_puf16.Rda")
@@ -16,41 +17,24 @@ load("./data/preimpute_pred_puf18.Rda")
 load("./data/preimpute_outcomes_puf18.Rda")
 
 
-hot_deck_pred_puf16 <- impute_shd(pred_puf16,
-                                 . ~ .,
-                                 pool = c("complete",
-                                          "univariate",
-                                          "multivariate"))
-hot_deck_outcomes_puf16 <- impute_shd(outcomes_puf16,
-                                  . ~ .,
-                                  pool = c("complete",
-                                           "univariate",
-                                           "multivariate"))
-hot_deck_pred_puf17 <- impute_shd(pred_puf17,
-                                  . ~ .,
-                                  pool = c("complete",
-                                           "univariate",
-                                           "multivariate"))
-hot_deck_outcomes_puf17 <- impute_shd(outcomes_puf17,
-                                      . ~ .,
-                                      pool = c("complete",
-                                               "univariate",
-                                               "multivariate"))
-hot_deck_pred_puf18 <- impute_shd(pred_puf18,
-                                  . ~ .,
-                                  pool = c("complete",
-                                           "univariate",
-                                           "multivariate"))
-hot_deck_outcomes_puf18 <- impute_shd(outcomes_puf18,
-                                      . ~ .,
-                                      pool = c("complete",
-                                               "univariate",
-                                               "multivariate"))
+pred_puf16 <- mutate_all(impute_shd(preimpute_pred_puf16,
+                                 . ~ .),function(x) as.numeric(x))
+
+outcomes_puf16 <- mutate_all(impute_shd(preimpute_outcomes_puf16,
+                                  . ~ .),function(x) as.numeric(x))
+pred_puf17 <- mutate_all(impute_shd(preimpute_pred_puf17,
+                                  . ~ .),function(x) as.numeric(x))
+outcomes_puf17 <- mutate_all(impute_shd(preimpute_outcomes_puf17,
+                                      . ~ .),function(x) as.numeric(x))
+pred_puf18 <- mutate_all(impute_shd(preimpute_pred_puf18,
+                                  . ~ .),function(x) as.numeric(x))
+outcomes_puf18 <- mutate_all(impute_shd(preimpute_outcomes_puf18,
+                                      . ~ .),function(x) as.numeric(x))
 
 
-save(hot_deck_pred_puf16, file = paste0("./data/", "pred_puf16.Rda"))
-save(hot_deck_outcomes_puf16, file = paste0("./data/", "outcomes_puf16.Rda"))
-save(hot_deck_pred_puf17, file = paste0("./data/", "pred_puf17.Rda"))
-save(hot_deck_outcomes_puf17, file = paste0("./data/", "outcomes_puf17.Rda"))
-save(hot_deck_pred_puf18, file = paste0("./data/", "pred_puf18.Rda"))
-save(hot_deck_outcomes_puf18, file = paste0("./data/", "outcomes_puf18.Rda"))
+save(pred_puf16, file = paste0("./data/", "pred_puf16.Rda"))
+save(outcomes_puf16, file = paste0("./data/", "outcomes_puf16.Rda"))
+save(pred_puf17, file = paste0("./data/", "pred_puf17.Rda"))
+save(outcomes_puf17, file = paste0("./data/", "outcomes_puf17.Rda"))
+save(pred_puf18, file = paste0("./data/", "pred_puf18.Rda"))
+save(outcomes_puf18, file = paste0("./data/", "outcomes_puf18.Rda"))

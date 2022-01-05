@@ -24,21 +24,21 @@ outcome_grouping18 = data/grouped_outcomes_puf18.Rda
 
 
 ## Individual scripts
-data_processing16 data/preimpute_pred_puf16.Rda data/outcomes_puf16.Rda: data/acs_nsqip_puf16.txt
+data_processing16 $(preimpute_pred_puf16) $(outcomes_puf16): data/acs_nsqip_puf16.txt
 	Rscript data-processing/data_processing_puf16.R
-data_processing17 data/preimpute_pred_puf17.Rda data/outcomes_puf17.Rda: data/acs_nsqip_puf17.txt
+data_processing17 $(preimpute_pred_puf17) $(outcomes_puf17): data/acs_nsqip_puf17.txt
 	Rscript data-processing/data_processing_puf17.R
-data_processing18 data/preimpute_pred_puf18.Rda data/outcomes_puf18.Rda: data/acs_nsqip_puf18.txt
+data_processing18 $(preimpute_pred_puf18) $(outcomes_puf18): data/acs_nsqip_puf18.txt
 	Rscript data-processing/data_processing_puf18.R
 
-imputation pred_puf16 pred_puf17 pred_puf18: $(preimpute_pred_puf16) $(preimpute_pred_puf17) $(preimpute_pred_puf18)
+imputation $(pred_puf16) $(pred_puf17) $(pred_puf18): $(preimpute_pred_puf16) $(preimpute_pred_puf17) $(preimpute_pred_puf18)
 	Rscript data-processing/imputation.R
 
-outcome_grouping16: $(outcomes_puf16)
+outcome_grouping16 $(outcome_grouping16): $(outcomes_puf16)
 	Rscript data-processing/outcome_grouping_puf16.R
-outcome_grouping17: $(outcomes_puf17)
+outcome_grouping17 $(outcome_grouping17): $(outcomes_puf17)
 	Rscript data-processing/outcome_grouping_puf17.R
-outcome_grouping18: $(outcomes_puf18)
+outcome_grouping18 $(outcome_grouping18): $(outcomes_puf18)
 	Rscript data-processing/outcome_grouping_puf18.R
 
 data_quality16: $(pred_puf16) $(outcomes_puf16) data/acs_nsqip_puf16.txt

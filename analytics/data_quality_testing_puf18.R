@@ -109,7 +109,7 @@ pred_sum_testing_puf18 <- transmute(pred_puf18,
                   anesth = anesth_epi + anesth_gen + anesth_local + anesth_iv + anesth_none + anesth_other + anesth_reg + anesth_spine + anesth_unk + anesth_monitor,
                   
                   # Additional Anesthesia Technique(s)
-                  anesth_add = anesth_other_gen + anesth_other_epi + anesth_other_spine + anesth_other_reg + anesth_other_local + anesth_other_monitor_iv + anesth_other_other + anesth_other_none + anesth_other_multiple,
+                  #anesth_add = anesth_other_gen + anesth_other_epi + anesth_other_spine + anesth_other_reg + anesth_other_local + anesth_other_monitor_iv + anesth_other_other + anesth_other_none + anesth_other_multiple,
                   
                   # Elective Surgery
                   elective = elective_y + elective_n + elective_u,

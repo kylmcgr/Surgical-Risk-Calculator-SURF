@@ -104,15 +104,15 @@ preimpute_pred_puf18 <- transmute(datatrain_puf18,
                                   anesth_monitor = if_else(ANESTHES == "Monitored Anesthesia Care", 1, 0),#,missing=0),
                                   
                                   # Additional Anesthesia Technique(s)
-                                  anesth_other_gen = if_else(ANESTHES_OTHER == "General", 1, 0),#,missing=0),
-                                  anesth_other_epi = if_else(ANESTHES_OTHER == "Epidural", 1, 0),#,missing=0),
-                                  anesth_other_spine = if_else(ANESTHES_OTHER == "Spinal", 1, 0),#,missing=0),
-                                  anesth_other_reg = if_else(ANESTHES_OTHER == "Regional", 1, 0),#,missing=0),
-                                  anesth_other_local = if_else(ANESTHES_OTHER == "Local", 1, 0),#,missing=0),
-                                  anesth_other_monitor_iv = if_else(ANESTHES_OTHER == "Monitored Anesthesia Care/IV Sedation", 1, 0),#,missing=0),
-                                  anesth_other_other = if_else(ANESTHES_OTHER == "Other", 1, 0),#,missing=0),
-                                  anesth_other_multiple = if_else(grepl(",", ANESTHES_OTHER, fixed = TRUE), 1, 0),#,missing=0),
-                                  anesth_other_none = if_else(is.na(ANESTHES_OTHER), 1, 0),#,missing=0),
+                                  # anesth_other_gen = if_else(ANESTHES_OTHER == "General", 1, 0),#,missing=0),
+                                  # anesth_other_epi = if_else(ANESTHES_OTHER == "Epidural", 1, 0),#,missing=0),
+                                  # anesth_other_spine = if_else(ANESTHES_OTHER == "Spinal", 1, 0),#,missing=0),
+                                  # anesth_other_reg = if_else(ANESTHES_OTHER == "Regional", 1, 0),#,missing=0),
+                                  # anesth_other_local = if_else(ANESTHES_OTHER == "Local", 1, 0),#,missing=0),
+                                  # anesth_other_monitor_iv = if_else(ANESTHES_OTHER == "Monitored Anesthesia Care/IV Sedation", 1, 0),#,missing=0),
+                                  # anesth_other_other = if_else(ANESTHES_OTHER == "Other", 1, 0),#,missing=0),
+                                  # anesth_other_multiple = if_else(grepl(",", ANESTHES_OTHER, fixed = TRUE), 1, 0),#,missing=0),
+                                  # anesth_other_none = if_else(is.na(ANESTHES_OTHER), 1, 0),#,missing=0),
                                   
                                   # Surgical Specialty (Plastic Surgery Only)
                                   surgery_plastic = if_else(SURGSPEC == "Plastics", 1,0, missing=0),
@@ -235,7 +235,7 @@ preimpute_pred_puf18 <- transmute(datatrain_puf18,
                                   platlet_count = as.numeric(PRPLATE),#if_else(is.na(PRPLATE), -1, as.numeric(PRPLATE)),
                                   PPT = as.numeric(PRPTT),#if_else(is.na(PRPTT), -1, as.numeric(PRPTT)),
                                   INR_of_PT = as.numeric(PRINR),#if_else(is.na(PRINR), -1, as.numeric(PRINR)),
-                                  PT = as.numeric(PRPT),#if_else(is.na(PRPT), -1, as.numeric(PRPT)),
+                                  #PT = as.numeric(PRPT),#if_else(is.na(PRPT), -1, as.numeric(PRPT)),
                                   
                                   # Other Procedures (CPT)
                                   other_proc1 = if_else(is.na(OTHERCPT1), 0, 1),
@@ -301,253 +301,253 @@ preimpute_pred_puf18 <- transmute(datatrain_puf18,
 # NAs left and imputed
 # for categorical predictors, NAs not put in a category
 
-preimpute_outcomes_puf18 <- transmute(datatrain_puf18,
-                           
-                           # Discharge Destination
-                           discharge_unknown = if_else(DISCHDEST == "Unknown", 1, 0),#,missing=0),
-                           discharge_skilled = if_else(DISCHDEST == "Skilled Care, Not Home", 1, 0),#,missing=0),
-                           discharge_unskilled = if_else(DISCHDEST == "Unskilled Facility Not Home", 1, 0),#,missing=0),
-                           discharge_facility = if_else(DISCHDEST == "Facility Which was Home", 1, 0),#,missing=0),
-                           discharge_home = if_else(DISCHDEST == "Home", 1, 0),#,missing=0),
-                           discharge_acute = if_else(DISCHDEST == "Separate Acute Care", 1, 0),#,missing=0),
-                           discharge_rehab = if_else(DISCHDEST == "Rehab", 1, 0),#,missing=0),
-                           discharge_expired = if_else(DISCHDEST == "Expired", 1, 0),#,missing=0),
-                           discharge_multi = if_else(DISCHDEST == "Multi - level Senior Community", 1, 0),#,missing=0),
-                           discharge_hospice = if_else(DISCHDEST == "Hospice", 1, 0),#,missing=0),
-                           discharge_ama = if_else(DISCHDEST == "Against Medical Advice (AMA)", 1, 0),#,missing=0),
-                           
-                           # Total operation time
-                           optime = as.numeric(OPTIME),#if_else(is.na(OPTIME), -1, as.numeric(OPTIME)),#,missing=-1),
-                           # Hospital discharge Year
-                           dicharge_year = as.numeric(HDISDT),#if_else(is.na(HDISDT), 0, as.numeric(HDISDT)),#,missing=0),
-                           # Year of death
-                           death_year = as.numeric(YRDEATH),#if_else(is.na(YRDEATH), 0, as.numeric(YRDEATH)),#,missing=0),
-                           # Length of total hospital stay 
-                           total_hosp_stay = as.numeric(TOTHLOS),#if_else(is.na(TOTHLOS), -1, as.numeric(TOTHLOS)),#,missing=-1),
-                           
-                           # Superficial Incisional SS
-                           num_sup_ssi = as.numeric(NSUPINFEC),#if_else(is.na(NSUPINFEC), 0, as.numeric(NSUPINFEC)),#,missing=0),
-                           sup_ssi_y = if_else(SUPINFEC == "Superficial Incisional SSI", 1, 0),#,missing=0),
-                           sup_ssi_n = if_else(SUPINFEC == "0", 1, 0),#,missing=0),
-                           sup_ssi_patos_y = if_else(SSSIPATOS == "Yes", 1, 0),#,missing=0),
-                           sup_ssi_patos_n = if_else(SSSIPATOS == "0" , 1, 0),#,missing=0),
-                           #days_sup_ssi = if_else(is.na(DSUPINFEC), -1, as.numeric(DSUPINFEC)),#,missing=-1),
-                           
-                           # Deep Incisional SSI
-                           num_deep_ssi = as.numeric(NWNDINFD),#if_else(is.na(NWNDINFD), 0, as.numeric(NWNDINFD)),#,missing=0),
-                           deep_ssi_y = if_else(WNDINFD == "Deep Incisional SSI", 1, 0),#,missing=0),
-                           deep_ssi_n = if_else(WNDINFD == "0", 1, 0),#,missing=0),
-                           deep_ssi_patos_y = if_else(DSSIPATOS == "Yes", 1, 0),#,missing=0),
-                           deep_ssi_patos_n = if_else(DSSIPATOS == "0", 1, 0),#,missing=0),
-                           #days_deep_ssi = if_else(is.na(DWNDINFD), -1, as.numeric(DWNDINFD)),#,missing=-1),
-                           
-                           # Organ/Space SSI
-                           num_organ_ssi = as.numeric(NORGSPCSSI),#if_else(is.na(NORGSPCSSI), 0, as.numeric(NORGSPCSSI)),#,missing=0),
-                           organ_ssi_y = if_else(ORGSPCSSI == "Organ/Space SSI" , 1, 0),#,missing=0),
-                           organ_ssi_n = if_else(ORGSPCSSI == "0"  , 1, 0),#,missing=0),
-                           organ_ssi_patos_y = if_else(OSSIPATOS == "Yes", 1, 0),#,missing=0),
-                           organ_ssi_patos_n = if_else(OSSIPATOS == "0" , 1, 0),#,missing=0),
-                           #days_organ_ssi = if_else(is.na(DORGSPCSSI), -1, as.numeric(DORGSPCSSI)),#,missing=-1),
-                           
-                           # Wound Disruption
-                           num_wound_disruption = as.numeric(NDEHIS),#if_else(is.na(NDEHIS), 0, as.numeric(NDEHIS)),#,missing=0),
-                           wound_disruption_y = if_else(DEHIS == "Wound Disruption", 1, 0),#,missing=0),
-                           wound_disruption_n = if_else(DEHIS == "0", 1, 0),#,missing=0),
-                           #days_wound_disruption = if_else(is.na(DDEHIS), -1, as.numeric(DDEHIS)),#,missing=-1),
-                           
-                           # Pneumonia
-                           num_pneumonia = as.numeric(NOUPNEUMO),#if_else(is.na(NOUPNEUMO), 0, as.numeric(NOUPNEUMO)),#,missing=0),
-                           pneumonia_y = if_else(OUPNEUMO == "Pneumonia", 1, 0),
-                           pneumonia_n = if_else(OUPNEUMO == "0", 1, 0),#,missing=0),
-                           pneumonia_patos_y = if_else(PNAPATOS == "Yes", 1, 0),#,missing=0),
-                           pneumonia_patos_n = if_else(PNAPATOS == "0", 1, 0),#,missing=0),
-                           #days_pneumonia = if_else(is.na(DOUPNEUMO), -1, as.numeric(DOUPNEUMO)),#,missing=-1),
-                           
-                           # Unplanned Intubation
-                           num_unplanned_intubation = as.numeric(NREINTUB),#if_else(is.na(NREINTUB), 0, as.numeric(NREINTUB)),#,missing=0),
-                           unplanned_intubation_y = if_else(REINTUB == "Unplanned Intubation", 1, 0),#,missing=0),
-                           unplanned_intubation_n = if_else(REINTUB == "0", 1, 0),#,missing=0),
-                           #days_unplanned_intubation = if_else(is.na(DREINTUB), -1, as.numeric(DREINTUB)),#,missing=-1),
-                           
-                           # Pulmonary Embolism
-                           num_emb = as.numeric(NPULEMBOL),#if_else(is.na(NPULEMBOL), 0, as.numeric(NPULEMBOL)),#,missing=0),
-                           emb_y = if_else(PULEMBOL == "Pulmonary Embolism" , 1, 0),#,missing=0),
-                           emb_n = if_else(PULEMBOL == "0" , 1, 0),#,missing=0),
-                           #days_emb = if_else(is.na(DPULEMBOL), -1, as.numeric(DPULEMBOL)),#,missing=-1),
-                           
-                           # On Ventilator > 48 Hours
-                           num_vent = as.numeric(NFAILWEAN),#if_else(is.na(NFAILWEAN), 0, as.numeric(NFAILWEAN)),#,missing=0),
-                           vent_y = if_else(FAILWEAN == "On Ventilator greater than 48 Hours",1,0),#,missing=0),
-                           vent_n = if_else(FAILWEAN == "0", 1, 0),#,missing=0),
-                           vent_patos_y = if_else(VENTPATOS == "Yes", 1, 0),#,missing=0 ),
-                           vent_patos_n = if_else(VENTPATOS == "0", 1, 0),#,missing=0 ),
-                           #days_vent = if_else(is.na(DFAILWEAN), -1, as.numeric(DFAILWEAN)),#,missing=-1),
-                           
-                           # Progressive Renal Insufficiency
-                           num_PRF = as.numeric(NRENAINSF),#if_else(is.na(NRENAINSF), 0, as.numeric(NRENAINSF)),#,missing=0),
-                           PRF_y = if_else(RENAINSF == "Progressive Renal Insufficiency", 1, 0),#,missing=0),
-                           PRF_n = if_else(RENAINSF == "0", 1, 0),#,missing=0),
-                           #days_PRF = if_else(is.na(DRENAINSF), -1, as.numeric(DRENAINSF)),#,missing=-1),
-                           
-                           # Acute Renal Failure
-                           num_ARF = as.numeric(NOPRENAFL),#if_else(is.na(NOPRENAFL), 0, as.numeric(NOPRENAFL)),#,missing=0),     
-                           ARF_y = if_else(OPRENAFL == "Acute Renal Failure", 1, 0),#,missing=0),
-                           ARF_n = if_else(OPRENAFL == "0", 1, 0),#,missing=0),
-                           #days_ARF = if_else(is.na(DOPRENAFL), -1, as.numeric(DOPRENAFL)),#,missing=-1),
-                           
-                           # Urinary Tract Infection
-                           num_uti = as.numeric(NURNINFEC),#if_else(is.na(NURNINFEC), 0, as.numeric(NURNINFEC)),#,missing=0),
-                           uti_y = if_else(URNINFEC == "Urinary Tract Infection", 1, 0),#,missing=0),
-                           uti_n = if_else(URNINFEC == "0", 1, 0),#,missing=0),
-                           uti_patos_y = if_else(UTIPATOS=="Yes", 1, 0),#,missing=0),
-                           uti_patos_n = if_else(UTIPATOS=="0", 1, 0),#,missing=0),
-                           #days_uti = if_else(is.na(DURNINFEC), -1, as.numeric(DURNINFEC)),#,missing=-1),
-                           
-                           # Stroke/Cerebral Vascular Accident
-                           num_stroke = as.numeric(NCNSCVA),#if_else(is.na(NCNSCVA), 0, as.numeric(NCNSCVA)),#,missing=0),
-                           cva_neuro_def_y = if_else(CNSCVA == "Stroke/CVA", 1, 0),#,missing=0),
-                           cva_neuro_def_n = if_else(CNSCVA == "0", 1, 0),#,missing=0),
-                           #days_stroke = if_else(is.na(DCNSCVA), -1, as.numeric(DCNSCVA)),#,missing=-1),
-                           
-                           # Cardiac Arrest Requiring CPR
-                           num_cpr = as.numeric(NCDARREST),#if_else(is.na(NCDARREST), 0, as.numeric(NCDARREST)),#,missing=0),
-                           cpr_y = if_else(CDARREST == "Cardiac Arrest Requiring CPR", 1, 0),#,missing=0),
-                           cpr_n = if_else(CDARREST == "0", 1, 0),#,missing=0),
-                           #days_cpr = if_else(is.na(DCDARREST), -1, as.numeric(DCDARREST)),#,missing=-1),
-                           
-                           # Myocardial Infarction
-                           num_mi = as.numeric(NCDMI),#if_else(is.na(NCDMI), 0, as.numeric(NCDMI)),#,missing=0),
-                           mi_y = if_else(CDMI == "Myocardial Infarction", 1, 0),#,missing=0),
-                           mi_n = if_else(CDMI == "0", 1, 0),#,missing=0),
-                           #days_mi = if_else(is.na(DCDMI), -1, as.numeric(DCDMI)),#,missing=-1),
-                           
-                           # Bleeding Transfusions
-                           num_trans = as.numeric(NOTHBLEED),#if_else(is.na(NOTHBLEED), 0, as.numeric(NOTHBLEED)),#,missing=0),
-                           trans_y = if_else(OTHBLEED == "Transfusions/Intraop/Postop", 1, 0),#,missing=0),
-                           trans_n = if_else(OTHBLEED == "0", 1, 0),#,missing=0),
-                           #days_trans = if_else(is.na(DOTHBLEED), -1, as.numeric(DOTHBLEED)),#,missing=-1),
-                           
-                           # DVT/Thrombophlebitis
-                           num_thromb = as.numeric(NOTHDVT),#if_else(is.na(NOTHDVT), 0, as.numeric(NOTHDVT)),#,missing=0),
-                           thromb_y = if_else(OTHDVT == "DVT Requiring Therapy", 1, 0),#,missing=0),
-                           thromb_n = if_else(OTHDVT == "0", 1, 0),#,missing=0),
-                           #days_thromb = if_else(is.na(DOTHDVT), -1, as.numeric(DOTHDVT)),#,missing=-1),
-                           
-                           # Sepsis
-                           num_sepsis = as.numeric(NOTHSYSEP),#if_else(is.na(NOTHSYSEP), 0, as.numeric(NOTHSYSEP)),#,missing=0),
-                           sepsis_y = if_else(OTHSYSEP == "Sepsis", 1, 0),#,missing=0),
-                           sepsis_n = if_else(OTHSYSEP == "0", 1, 0),#,missing=0),
-                           sepsis_patos_y = if_else(SEPSISPATOS == "Yes", 1,0),#,missing=0),
-                           sepsis_patos_n = if_else(SEPSISPATOS == "0", 1,0),#,missing=0),
-                           #days_sepsis = if_else(is.na(DOTHSYSEP), -1, as.numeric(DOTHSYSEP)),#,missing=-1),
-                           
-                           # Septic Shock
-                           num_sepshock = as.numeric(NOTHSESHOCK),#if_else(is.na(NOTHSESHOCK), 0, as.numeric(NOTHSESHOCK)),#,missing=0),
-                           sepshock_y = if_else(OTHSESHOCK == "Septic Shock", 1, 0),#,missing=0),
-                           sepshock_n = if_else(OTHSESHOCK == "0", 1, 0),#,missing=0),
-                           sepshock_patos_y = if_else(SEPSHOCKPATOS == "Yes", 1,0),#,missing=0),
-                           sepshock_patos_n = if_else(SEPSHOCKPATOS == "0", 1,0),#,missing=0),
-                           #days_sepshock = if_else(is.na(DOTHSESHOCK), -1, as.numeric(DOTHSESHOCK)),#,missing=-1),
-                           
-                           # Post-op Diagnosis (ICD)
-                           postop_ICD9 = PODIAG,#if_else(is.na(PODIAG), "-1", PODIAG),#,missing="-1"),
-                           postop_ICD10 = PODIAG10,#if_else(is.na(PODIAG10), "-1", PODIAG10),#,missing="-1"),
-                           
-                           # Unplanned Reoperation
-                           return_OR_y = if_else(RETURNOR == "Yes", 1, 0),#,missing=0),
-                           return_OR_n = if_else(RETURNOR == "0", 1, 0),#,missing=0),
-                           
-                           # Days from Operation to Death
-                           #days_death = if_else(is.na(DOpertoD), -1, as.numeric(DOpertoD)),#,missing=-1),
-                           
-                           # Days from Operation to Discharge
-                           #days_discharge = if_else(is.na(DOptoDis), -1, as.numeric(DOptoDis)),#,missing=-1),
-                           
-                           # Still in Hospital > 30 Days 
-                           still_in_hosp_y = if_else(STILLINHOSP == "Yes", 1, 0),#,missing=0),
-                           still_in_hosp_n = if_else(STILLINHOSP == "0", 1, 0),#,missing=0),
-                           
-                           # Unplanned Reoperations
-                           reop1_y = if_else(REOPERATION1 == "Yes", 1, 0),#,missing=0),
-                           reop1_n = if_else(REOPERATION1 != "Yes", 1, 0),#,missing=0),
-                           #days_reop1 = if_else(is.na(RETORPODAYS), -1, as.numeric(RETORPODAYS)),#,missing=-1),
-                           cpt_reop1 = REOPORCPT1,#if_else(is.na(REOPORCPT1), "-1", REOPORCPT1),#,missing="-1"),
-                           related_reop1_y = if_else(RETORRELATED == "Yes", 1, 0),#,missing=0),
-                           related_reop1_n = if_else(RETORRELATED != "Yes", 1, 0),#,missing=0),
-                           reop1_ICD9 = REOPORICD91,#if_else(is.na(REOPORICD91), "-1", REOPORICD91),#,missing="-1"),
-                           reop1_ICD10 = REOPOR1ICD101,#if_else(is.na(REOPOR1ICD101), "-1", REOPOR1ICD101),#,missing="-1"),
-                           
-                           reop2_y = if_else(REOPERATION2 == "Yes", 1, 0),#,missing=0),
-                           reop2_n = if_else(REOPERATION2 != "Yes", 1, 0),#,missing=0),
-                           #days_reop2 = if_else(is.na(RETOR2PODAYS), -1, as.numeric(RETOR2PODAYS)),#,missing=-1),
-                           cpt_reop2 = REOPOR2CPT1,#if_else(is.na(REOPOR2CPT1), "-1", REOPOR2CPT1),#,missing="-1"),
-                           related_reop2_y = if_else(RETOR2RELATED == "Yes", 1, 0),#,missing=0),
-                           related_reop2_n = if_else(RETOR2RELATED != "Yes", 1, 0),#,missing=0),
-                           reop2_ICD9 = REOPOR2ICD91,#if_else(is.na(REOPOR2ICD91), "-1", REOPOR2ICD91),#,missing="-1"),
-                           reop2_ICD10 = REOPOR2ICD101,#if_else(is.na(REOPOR2ICD101), "-1", REOPOR2ICD101),#,missing="-1"),
-                           
-                           reop3plus_y = if_else(REOPERATION3 == "Yes", 1, 0),#,missing=0),
-                           reop3plus_n = if_else(REOPERATION3 != "Yes", 1, 0),#,missing=0),
-                           
-                           # Hospital Readmission
-                           readmit1_y = if_else(READMISSION1 == "Yes", 1, 0),#,missing=0),
-                           readmit1_n = if_else(READMISSION1 != "Yes", 1, 0),#,missing=0),
-                           #days_readmit1 = if_else(is.na(READMPODAYS1), -1, as.numeric(READMPODAYS1)),#,missing=-1),
-                           unplan_readmit1_y = if_else(UNPLANNEDREADMISSION1 == "Yes", 1, 0),#,missing=0),
-                           unplan_readmit1_n = if_else(UNPLANNEDREADMISSION1 != "Yes", 1, 0),#,missing=0),
-                           unplan_readmit1_related_y = if_else(READMRELATED1 == "Yes", 1, 0),#,missing=0),
-                           unplan_readmit1_related_n = if_else(READMRELATED1 != "Yes", 1, 0),#,missing=0),
-                           
-                           readmit2_y = if_else(READMISSION2 == "Yes", 1, 0),#,missing=0),
-                           readmit2_n = if_else(READMISSION2 != "Yes", 1, 0),#,missing=0),
-                           #days_readmit2 = if_else(is.na(READMPODAYS2), -1, as.numeric(READMPODAYS2)),#,missing=-1),
-                           unplan_readmit2_y = if_else(UNPLANNEDREADMISSION2 == "Yes", 1, 0),#,missing=0),
-                           unplan_readmit2_n = if_else(UNPLANNEDREADMISSION2 != "Yes", 1, 0),#,missing=0),
-                           unplan_readmit2_related_y = if_else(READMRELATED2 == "Yes", 1, 0),#,missing=0),
-                           unplan_readmit2_related_n = if_else(READMRELATED2 != "Yes", 1, 0),#,missing=0),
-                           
-                           readmit3_y = if_else(READMISSION3 == "Yes", 1, 0),#,missing=0),
-                           readmit3_n = if_else(READMISSION3 != "Yes", 1, 0),#,missing=0),
-                           #days_readmit3 = if_else(is.na(READMPODAYS3), -1, as.numeric(READMPODAYS3)),#,missing=-1),
-                           unplan_readmit3_y = if_else(UNPLANNEDREADMISSION3 == "Yes", 1, 0),#,missing=0),
-                           unplan_readmit3_n = if_else(UNPLANNEDREADMISSION3 != "Yes", 1, 0),#,missing=0),
-                           unplan_readmit3_related_y = if_else(READMRELATED3 == "Yes", 1, 0),#,missing=0),
-                           unplan_readmit3_related_n = if_else(READMRELATED3 != "Yes", 1, 0),#,missing=0),
-                           
-                           readmit4_y = if_else(READMISSION4 == "Yes", 1, 0),#,missing=0),
-                           readmit4_n = if_else(READMISSION4 != "Yes", 1, 0),#,missing=0),
-                           #days_readmit4 = if_else(is.na(READMPODAYS4), -1, as.numeric(READMPODAYS4)),#,missing=-1),
-                           unplan_readmit4_y = if_else(UNPLANNEDREADMISSION4 == "Yes", 1, 0),#,missing=0),
-                           unplan_readmit4_n = if_else(UNPLANNEDREADMISSION4 != "Yes", 1, 0),#,missing=0),
-                           unplan_readmit4_related_y = if_else(READMRELATED4 == "Yes", 1, 0),#,missing=0),
-                           unplan_readmit4_related_n = if_else(READMRELATED4 != "Yes", 1, 0),#,missing=0),
-                           
-                           readmit5_y = if_else(READMISSION5 == "Yes", 1, 0),#,missing=0),
-                           readmit5_n = if_else(READMISSION5 != "Yes", 1, 0),#,missing=0),
-                           #days_readmit5 = if_else(is.na(READMPODAYS5), -1, as.numeric(READMPODAYS5)),#,missing=-1),
-                           unplan_readmit5_y = if_else(UNPLANNEDREADMISSION5 == "Yes", 1, 0),#,missing=0),
-                           unplan_readmit5_n = if_else(UNPLANNEDREADMISSION5 != "Yes", 1, 0),#,missing=0),
-                           unplan_readmit5_related_y = if_else(READMRELATED5 == "Yes", 1, 0),#,missing=0),
-                           unplan_readmit5_related_n = if_else(READMRELATED5 != "Yes", 1, 0),#,missing=0),
-                           
-                           # Surgical Wound Closure
-                           wound_fully_closed = if_else(WOUND_CLOSURE == "All layers of incision (deep and superficial) fully closed", 1, 0),#,missing=0),
-                           wound_deep_closed = if_else(WOUND_CLOSURE == "Only deep layers closed; superficial left open", 1, 0),#,missing=0),
-                           wound_not_closed = if_else(WOUND_CLOSURE == "No layers of incision are surgically closed", 1, 0),#,missing=0),
-                           
-                           
-                           # Other Post-op Occurrence (ICD)
-                           postop_ICD9 = PODIAG_OTHER,#if_else(is.na(PODIAG_OTHER), "-1", PODIAG_OTHER),#,missing="-1"),
-                           postop_ICD10 = PODIAG_OTHER10,#if_else(is.na(PODIAG_OTHER10), "-1", PODIAG_OTHER10),#,missing="-1"),
-                           
-                           #  Clostridium Difficile (C.diff) Colitis
-                           cdiff_y = if_else(OTHCDIFF == "C. diff", 1, 0),#,missing=0),
-                           cdiff_n = if_else(OTHCDIFF == "0", 1, 0),#,missing=0),
-                           num_cdiff = as.numeric(NOTHCDIFF),#if_else(is.na(NOTHCDIFF), 0, as.numeric(NOTHCDIFF)),#,missing=0),
-                           #days_cdiff = if_else(is.na(DOTHCDIFF), -1, as.numeric(DOTHCDIFF)),#,missing=-1),
+outcomes_puf18 <- transmute(datatrain_puf18,
+                            
+                            # Discharge Destination
+                            discharge_unknown = if_else(DISCHDEST == "Unknown", 1, 0,missing=0),
+                            discharge_skilled = if_else(DISCHDEST == "Skilled Care, Not Home", 1, 0,missing=0),
+                            discharge_unskilled = if_else(DISCHDEST == "Unskilled Facility Not Home", 1, 0,missing=0),
+                            discharge_facility = if_else(DISCHDEST == "Facility Which was Home", 1, 0,missing=0),
+                            discharge_home = if_else(DISCHDEST == "Home", 1, 0,missing=0),
+                            discharge_acute = if_else(DISCHDEST == "Separate Acute Care", 1, 0,missing=0),
+                            discharge_rehab = if_else(DISCHDEST == "Rehab", 1, 0,missing=0),
+                            discharge_expired = if_else(DISCHDEST == "Expired", 1, 0,missing=0),
+                            discharge_multi = if_else(DISCHDEST == "Multi - level Senior Community", 1, 0,missing=0),
+                            discharge_hospice = if_else(DISCHDEST == "Hospice", 1, 0,missing=0),
+                            discharge_ama = if_else(DISCHDEST == "Against Medical Advice (AMA)", 1, 0,missing=0),
+                            
+                            # Total operation time
+                            optime = if_else(is.na(OPTIME), -1, as.numeric(OPTIME),missing=-1),
+                            # Hospital discharge Year
+                            dicharge_year = if_else(is.na(HDISDT), 0, as.numeric(HDISDT),missing=0),
+                            # Year of death
+                            death_year = if_else(is.na(YRDEATH), 0, as.numeric(YRDEATH),missing=0),
+                            # Length of total hospital stay 
+                            total_hosp_stay = if_else(is.na(TOTHLOS), -1, as.numeric(TOTHLOS),missing=-1),
+                            
+                            # Superficial Incisional SS
+                            num_sup_ssi = if_else(is.na(NSUPINFEC), 0, as.numeric(NSUPINFEC),missing=0),
+                            sup_ssi_y = if_else(SUPINFEC == "Superficial Incisional SSI", 1, 0,missing=0),
+                            sup_ssi_n = if_else(SUPINFEC == "0", 1, 0,missing=0),
+                            sup_ssi_patos_y = if_else(SSSIPATOS == "Yes", 1, 0,missing=0),
+                            sup_ssi_patos_n = if_else(SSSIPATOS == "0" , 1, 0,missing=0),
+                            days_sup_ssi = if_else(is.na(DSUPINFEC), -1, as.numeric(DSUPINFEC),missing=-1),
+                            
+                            # Deep Incisional SSI
+                            num_deep_ssi = if_else(is.na(NWNDINFD), 0, as.numeric(NWNDINFD),missing=0),
+                            deep_ssi_y = if_else(WNDINFD == "Deep Incisional SSI", 1, 0,missing=0),
+                            deep_ssi_n = if_else(WNDINFD == "0", 1, 0,missing=0),
+                            deep_ssi_patos_y = if_else(DSSIPATOS == "Yes", 1, 0,missing=0),
+                            deep_ssi_patos_n = if_else(DSSIPATOS == "0", 1, 0,missing=0),
+                            days_deep_ssi = if_else(is.na(DWNDINFD), -1, as.numeric(DWNDINFD),missing=-1),
+                            
+                            # Organ/Space SSI
+                            num_organ_ssi = if_else(is.na(NORGSPCSSI), 0, as.numeric(NORGSPCSSI),missing=0),
+                            organ_ssi_y = if_else(ORGSPCSSI == "Organ/Space SSI" , 1, 0,missing=0),
+                            organ_ssi_n = if_else(ORGSPCSSI == "0"  , 1, 0,missing=0),
+                            organ_ssi_patos_y = if_else(OSSIPATOS == "Yes", 1, 0,missing=0),
+                            organ_ssi_patos_n = if_else(OSSIPATOS == "0" , 1, 0,missing=0),
+                            days_organ_ssi = if_else(is.na(DORGSPCSSI), -1, as.numeric(DORGSPCSSI),missing=-1),
+                            
+                            # Wound Disruption
+                            num_wound_disruption = if_else(is.na(NDEHIS), 0, as.numeric(NDEHIS),missing=0),
+                            wound_disruption_y = if_else(DEHIS == "Wound Disruption", 1, 0,missing=0),
+                            wound_disruption_n = if_else(DEHIS == "0", 1, 0,missing=0),
+                            days_wound_disruption = if_else(is.na(DDEHIS), -1, as.numeric(DDEHIS),missing=-1),
+                            
+                            # Pneumonia
+                            num_pneumonia = if_else(is.na(NOUPNEUMO), 0, as.numeric(NOUPNEUMO),missing=0),
+                            pneumonia_y = if_else(OUPNEUMO == "Pneumonia", 1, 0),
+                            pneumonia_n = if_else(OUPNEUMO == "0", 1, 0,missing=0),
+                            pneumonia_patos_y = if_else(PNAPATOS == "Yes", 1, 0,missing=0),
+                            pneumonia_patos_n = if_else(PNAPATOS == "0", 1, 0,missing=0),
+                            days_pneumonia = if_else(is.na(DOUPNEUMO), -1, as.numeric(DOUPNEUMO),missing=-1),
+                            
+                            # Unplanned Intubation
+                            num_unplanned_intubation = if_else(is.na(NREINTUB), 0, as.numeric(NREINTUB),missing=0),
+                            unplanned_intubation_y = if_else(REINTUB == "Unplanned Intubation", 1, 0,missing=0),
+                            unplanned_intubation_n = if_else(REINTUB == "0", 1, 0,missing=0),
+                            days_unplanned_intubation = if_else(is.na(DREINTUB), -1, as.numeric(DREINTUB),missing=-1),
+                            
+                            # Pulmonary Embolism
+                            num_emb = if_else(is.na(NPULEMBOL), 0, as.numeric(NPULEMBOL),missing=0),
+                            emb_y = if_else(PULEMBOL == "Pulmonary Embolism" , 1, 0,missing=0),
+                            emb_n = if_else(PULEMBOL == "0" , 1, 0,missing=0),
+                            days_emb = if_else(is.na(DPULEMBOL), -1, as.numeric(DPULEMBOL),missing=-1),
+                            
+                            # On Ventilator > 48 Hours
+                            num_vent = if_else(is.na(NFAILWEAN), 0, as.numeric(NFAILWEAN),missing=0),
+                            vent_y = if_else(FAILWEAN == "On Ventilator greater than 48 Hours",1,0,missing=0),
+                            vent_n = if_else(FAILWEAN == "0", 1, 0,missing=0),
+                            vent_patos_y = if_else(VENTPATOS == "Yes", 1, 0,missing=0 ),
+                            vent_patos_n = if_else(VENTPATOS == "0", 1, 0,missing=0 ),
+                            days_vent = if_else(is.na(DFAILWEAN), -1, as.numeric(DFAILWEAN),missing=-1),
+                            
+                            # Progressive Renal Insufficiency
+                            num_PRF = if_else(is.na(NRENAINSF), 0, as.numeric(NRENAINSF),missing=0),
+                            PRF_y = if_else(RENAINSF == "Progressive Renal Insufficiency", 1, 0,missing=0),
+                            PRF_n = if_else(RENAINSF == "0", 1, 0,missing=0),
+                            days_PRF = if_else(is.na(DRENAINSF), -1, as.numeric(DRENAINSF),missing=-1),
+                            
+                            # Acute Renal Failure
+                            num_ARF = if_else(is.na(NOPRENAFL), 0, as.numeric(NOPRENAFL),missing=0),     
+                            ARF_y = if_else(OPRENAFL == "Acute Renal Failure", 1, 0,missing=0),
+                            ARF_n = if_else(OPRENAFL == "0", 1, 0,missing=0),
+                            days_ARF = if_else(is.na(DOPRENAFL), -1, as.numeric(DOPRENAFL),missing=-1),
+                            
+                            # Urinary Tract Infection
+                            num_uti = if_else(is.na(NURNINFEC), 0, as.numeric(NURNINFEC),missing=0),
+                            uti_y = if_else(URNINFEC == "Urinary Tract Infection", 1, 0,missing=0),
+                            uti_n = if_else(URNINFEC == "0", 1, 0,missing=0),
+                            uti_patos_y = if_else(UTIPATOS=="Yes", 1, 0,missing=0),
+                            uti_patos_n = if_else(UTIPATOS=="0", 1, 0,missing=0),
+                            days_uti = if_else(is.na(DURNINFEC), -1, as.numeric(DURNINFEC),missing=-1),
+                            
+                            # Stroke/Cerebral Vascular Accident
+                            num_stroke = if_else(is.na(NCNSCVA), 0, as.numeric(NCNSCVA),missing=0),
+                            cva_neuro_def_y = if_else(CNSCVA == "Stroke/CVA", 1, 0,missing=0),
+                            cva_neuro_def_n = if_else(CNSCVA == "0", 1, 0,missing=0),
+                            days_stroke = if_else(is.na(DCNSCVA), -1, as.numeric(DCNSCVA),missing=-1),
+                            
+                            # Cardiac Arrest Requiring CPR
+                            num_cpr = if_else(is.na(NCDARREST), 0, as.numeric(NCDARREST),missing=0),
+                            cpr_y = if_else(CDARREST == "Cardiac Arrest Requiring CPR", 1, 0,missing=0),
+                            cpr_n = if_else(CDARREST == "0", 1, 0,missing=0),
+                            days_cpr = if_else(is.na(DCDARREST), -1, as.numeric(DCDARREST),missing=-1),
+                            
+                            # Myocardial Infarction
+                            num_mi = if_else(is.na(NCDMI), 0, as.numeric(NCDMI),missing=0),
+                            mi_y = if_else(CDMI == "Myocardial Infarction", 1, 0,missing=0),
+                            mi_n = if_else(CDMI == "0", 1, 0,missing=0),
+                            days_mi = if_else(is.na(DCDMI), -1, as.numeric(DCDMI),missing=-1),
+                            
+                            # Bleeding Transfusions
+                            num_trans = if_else(is.na(NOTHBLEED), 0, as.numeric(NOTHBLEED),missing=0),
+                            trans_y = if_else(OTHBLEED == "Transfusions/Intraop/Postop", 1, 0,missing=0),
+                            trans_n = if_else(OTHBLEED == "0", 1, 0,missing=0),
+                            days_trans = if_else(is.na(DOTHBLEED), -1, as.numeric(DOTHBLEED),missing=-1),
+                            
+                            # DVT/Thrombophlebitis
+                            num_thromb = if_else(is.na(NOTHDVT), 0, as.numeric(NOTHDVT),missing=0),
+                            thromb_y = if_else(OTHDVT == "DVT Requiring Therapy", 1, 0,missing=0),
+                            thromb_n = if_else(OTHDVT == "0", 1, 0,missing=0),
+                            days_thromb = if_else(is.na(DOTHDVT), -1, as.numeric(DOTHDVT),missing=-1),
+                            
+                            # Sepsis
+                            num_sepsis = if_else(is.na(NOTHSYSEP), 0, as.numeric(NOTHSYSEP),missing=0),
+                            sepsis_y = if_else(OTHSYSEP == "Sepsis", 1, 0,missing=0),
+                            sepsis_n = if_else(OTHSYSEP == "0", 1, 0,missing=0),
+                            sepsis_patos_y = if_else(SEPSISPATOS == "Yes", 1,0,missing=0),
+                            sepsis_patos_n = if_else(SEPSISPATOS == "0", 1,0,missing=0),
+                            days_sepsis = if_else(is.na(DOTHSYSEP), -1, as.numeric(DOTHSYSEP),missing=-1),
+                            
+                            # Septic Shock
+                            num_sepshock = if_else(is.na(NOTHSESHOCK), 0, as.numeric(NOTHSESHOCK),missing=0),
+                            sepshock_y = if_else(OTHSESHOCK == "Septic Shock", 1, 0,missing=0),
+                            sepshock_n = if_else(OTHSESHOCK == "0", 1, 0,missing=0),
+                            sepshock_patos_y = if_else(SEPSHOCKPATOS == "Yes", 1,0,missing=0),
+                            sepshock_patos_n = if_else(SEPSHOCKPATOS == "0", 1,0,missing=0),
+                            days_sepshock = if_else(is.na(DOTHSESHOCK), -1, as.numeric(DOTHSESHOCK),missing=-1),
+                            
+                            # Post-op Diagnosis (ICD)
+                            postop_ICD9 = if_else(is.na(PODIAG), "-1", PODIAG,missing="-1"),
+                            postop_ICD10 = if_else(is.na(PODIAG10), "-1", PODIAG10,missing="-1"),
+                            
+                            # Unplanned Reoperation
+                            return_OR_y = if_else(RETURNOR == "Yes", 1, 0,missing=0),
+                            return_OR_n = if_else(RETURNOR == "0", 1, 0,missing=0),
+                            
+                            # Days from Operation to Death
+                            days_death = if_else(is.na(DOpertoD), -1, as.numeric(DOpertoD),missing=-1),
+                            
+                            # Days from Operation to Discharge
+                            days_discharge = if_else(is.na(DOptoDis), -1, as.numeric(DOptoDis),missing=-1),
+                            
+                            # Still in Hospital > 30 Days 
+                            still_in_hosp_y = if_else(STILLINHOSP == "Yes", 1, 0,missing=0),
+                            still_in_hosp_n = if_else(STILLINHOSP == "0", 1, 0,missing=0),
+                            
+                            # Unplanned Reoperations
+                            reop1_y = if_else(REOPERATION1 == "Yes", 1, 0,missing=0),
+                            reop1_n = if_else(REOPERATION1 != "Yes", 1, 0,missing=0),
+                            days_reop1 = if_else(is.na(RETORPODAYS), -1, as.numeric(RETORPODAYS),missing=-1),
+                            cpt_reop1 = if_else(is.na(REOPORCPT1), "-1", REOPORCPT1,missing="-1"),
+                            related_reop1_y = if_else(RETORRELATED == "Yes", 1, 0,missing=0),
+                            related_reop1_n = if_else(RETORRELATED != "Yes", 1, 0,missing=0),
+                            reop1_ICD9 = if_else(is.na(REOPORICD91), "-1", REOPORICD91,missing="-1"),
+                            reop1_ICD10 = if_else(is.na(REOPOR1ICD101), "-1", REOPOR1ICD101,missing="-1"),
+                            
+                            reop2_y = if_else(REOPERATION2 == "Yes", 1, 0,missing=0),
+                            reop2_n = if_else(REOPERATION2 != "Yes", 1, 0,missing=0),
+                            days_reop2 = if_else(is.na(RETOR2PODAYS), -1, as.numeric(RETOR2PODAYS),missing=-1),
+                            cpt_reop2 = if_else(is.na(REOPOR2CPT1), "-1", REOPOR2CPT1,missing="-1"),
+                            related_reop2_y = if_else(RETOR2RELATED == "Yes", 1, 0,missing=0),
+                            related_reop2_n = if_else(RETOR2RELATED != "Yes", 1, 0,missing=0),
+                            reop2_ICD9 = if_else(is.na(REOPOR2ICD91), "-1", REOPOR2ICD91,missing="-1"),
+                            reop2_ICD10 = if_else(is.na(REOPOR2ICD101), "-1", REOPOR2ICD101,missing="-1"),
+                            
+                            reop3plus_y = if_else(REOPERATION3 == "Yes", 1, 0,missing=0),
+                            reop3plus_n = if_else(REOPERATION3 != "Yes", 1, 0,missing=0),
+                            
+                            # Hospital Readmission
+                            readmit1_y = if_else(READMISSION1 == "Yes", 1, 0,missing=0),
+                            readmit1_n = if_else(READMISSION1 != "Yes", 1, 0,missing=0),
+                            days_readmit1 = if_else(is.na(READMPODAYS1), -1, as.numeric(READMPODAYS1),missing=-1),
+                            unplan_readmit1_y = if_else(UNPLANNEDREADMISSION1 == "Yes", 1, 0,missing=0),
+                            unplan_readmit1_n = if_else(UNPLANNEDREADMISSION1 != "Yes", 1, 0,missing=0),
+                            unplan_readmit1_related_y = if_else(READMRELATED1 == "Yes", 1, 0,missing=0),
+                            unplan_readmit1_related_n = if_else(READMRELATED1 != "Yes", 1, 0,missing=0),
+                            
+                            readmit2_y = if_else(READMISSION2 == "Yes", 1, 0,missing=0),
+                            readmit2_n = if_else(READMISSION2 != "Yes", 1, 0,missing=0),
+                            days_readmit2 = if_else(is.na(READMPODAYS2), -1, as.numeric(READMPODAYS2),missing=-1),
+                            unplan_readmit2_y = if_else(UNPLANNEDREADMISSION2 == "Yes", 1, 0,missing=0),
+                            unplan_readmit2_n = if_else(UNPLANNEDREADMISSION2 != "Yes", 1, 0,missing=0),
+                            unplan_readmit2_related_y = if_else(READMRELATED2 == "Yes", 1, 0,missing=0),
+                            unplan_readmit2_related_n = if_else(READMRELATED2 != "Yes", 1, 0,missing=0),
+                            
+                            readmit3_y = if_else(READMISSION3 == "Yes", 1, 0,missing=0),
+                            readmit3_n = if_else(READMISSION3 != "Yes", 1, 0,missing=0),
+                            days_readmit3 = if_else(is.na(READMPODAYS3), -1, as.numeric(READMPODAYS3),missing=-1),
+                            unplan_readmit3_y = if_else(UNPLANNEDREADMISSION3 == "Yes", 1, 0,missing=0),
+                            unplan_readmit3_n = if_else(UNPLANNEDREADMISSION3 != "Yes", 1, 0,missing=0),
+                            unplan_readmit3_related_y = if_else(READMRELATED3 == "Yes", 1, 0,missing=0),
+                            unplan_readmit3_related_n = if_else(READMRELATED3 != "Yes", 1, 0,missing=0),
+                            
+                            readmit4_y = if_else(READMISSION4 == "Yes", 1, 0,missing=0),
+                            readmit4_n = if_else(READMISSION4 != "Yes", 1, 0,missing=0),
+                            days_readmit4 = if_else(is.na(READMPODAYS4), -1, as.numeric(READMPODAYS4),missing=-1),
+                            unplan_readmit4_y = if_else(UNPLANNEDREADMISSION4 == "Yes", 1, 0,missing=0),
+                            unplan_readmit4_n = if_else(UNPLANNEDREADMISSION4 != "Yes", 1, 0,missing=0),
+                            unplan_readmit4_related_y = if_else(READMRELATED4 == "Yes", 1, 0,missing=0),
+                            unplan_readmit4_related_n = if_else(READMRELATED4 != "Yes", 1, 0,missing=0),
+                            
+                            readmit5_y = if_else(READMISSION5 == "Yes", 1, 0,missing=0),
+                            readmit5_n = if_else(READMISSION5 != "Yes", 1, 0,missing=0),
+                            days_readmit5 = if_else(is.na(READMPODAYS5), -1, as.numeric(READMPODAYS5),missing=-1),
+                            unplan_readmit5_y = if_else(UNPLANNEDREADMISSION5 == "Yes", 1, 0,missing=0),
+                            unplan_readmit5_n = if_else(UNPLANNEDREADMISSION5 != "Yes", 1, 0,missing=0),
+                            unplan_readmit5_related_y = if_else(READMRELATED5 == "Yes", 1, 0,missing=0),
+                            unplan_readmit5_related_n = if_else(READMRELATED5 != "Yes", 1, 0,missing=0),
+                            
+                            # Surgical Wound Closure
+                            wound_fully_closed = if_else(WOUND_CLOSURE == "All layers of incision (deep and superficial) fully closed", 1, 0,missing=0),
+                            wound_deep_closed = if_else(WOUND_CLOSURE == "Only deep layers closed; superficial left open", 1, 0,missing=0),
+                            wound_not_closed = if_else(WOUND_CLOSURE == "No layers of incision are surgically closed", 1, 0,missing=0),
+                            
+                            
+                            # Other Post-op Occurrence (ICD)
+                            postop_ICD9 = if_else(is.na(PODIAG_OTHER), "-1", PODIAG_OTHER,missing="-1"),
+                            postop_ICD10 = if_else(is.na(PODIAG_OTHER10), "-1", PODIAG_OTHER10,missing="-1"),
+                            
+                            #  Clostridium Difficile (C.diff) Colitis
+                            cdiff_y = if_else(OTHCDIFF == "C. diff", 1, 0,missing=0),
+                            cdiff_n = if_else(OTHCDIFF == "0", 1, 0,missing=0),
+                            num_cdiff = if_else(is.na(NOTHCDIFF), 0, as.numeric(NOTHCDIFF),missing=0),
+                            days_cdiff = if_else(is.na(DOTHCDIFF), -1, as.numeric(DOTHCDIFF),missing=-1),
 )
 
 
 #### Export R Objects ####
 save(preimpute_pred_puf18, file = paste0("./data/", "preimpute_pred_puf18.Rda"))
-save(preimpute_outcomes_puf18, file = paste0("./data/", "preimpute_outcomes_puf18.Rda"))
+save(outcomes_puf18, file = paste0("./data/", "outcomes_puf18.Rda"))

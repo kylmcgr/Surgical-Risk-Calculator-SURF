@@ -12,9 +12,6 @@ demographics: demographics_by_year outcomes_by_year surgery_by_year
 preimpute_pred_puf16 = data/preimpute_pred_puf16.Rda
 preimpute_pred_puf17 = data/preimpute_pred_puf17.Rda
 preimpute_pred_puf18 = data/preimpute_pred_puf18.Rda
-preimpute_outcomes_puf16 = data/preimpute_outcomes_puf16.Rda
-preimpute_outcomes_puf17 = data/preimpute_outcomes_puf17.Rda
-preimpute_outcomes_puf18 = data/preimpute_outcomes_puf18.Rda
 pred_puf16 = data/pred_puf16.Rda
 pred_puf17 = data/pred_puf17.Rda
 pred_puf18 = data/pred_puf18.Rda
@@ -34,7 +31,7 @@ data_processing17 data/preimpute_pred_puf17.Rda data/outcomes_puf17.Rda: data/ac
 data_processing18 data/preimpute_pred_puf18.Rda data/outcomes_puf18.Rda: data/acs_nsqip_puf18.txt
 	Rscript data-processing/data_processing_puf18.R
 
-imputation: $(preimpute_pred_puf16) $(preimpute_pred_puf17) $(preimpute_pred_puf18) $(preimpute_outcomes_puf16) $(preimpute_outcomes_puf17) $(preimpute_outcomes_puf18)
+imputation pred_puf16 pred_puf17 pred_puf18: $(preimpute_pred_puf16) $(preimpute_pred_puf17) $(preimpute_pred_puf18)
 	Rscript data-processing/imputation.R
 
 outcome_grouping16: $(outcomes_puf16)

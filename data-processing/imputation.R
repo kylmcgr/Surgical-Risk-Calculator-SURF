@@ -6,35 +6,19 @@
 # Kyle McGraw, July 2019
 
 library(simputation)
-library(dplyr)
+# library(dplyr)
 
 ### Import Data ###
 load("./data/preimpute_pred_puf16.Rda")
-load("./data/preimpute_outcomes_puf16.Rda")
 load("./data/preimpute_pred_puf17.Rda")
-load("./data/preimpute_outcomes_puf17.Rda")
 load("./data/preimpute_pred_puf18.Rda")
-load("./data/preimpute_outcomes_puf18.Rda")
 
 
-pred_puf16 <- mutate_all(impute_shd(preimpute_pred_puf16,
-                                 . ~ .),function(x) as.numeric(x))
-
-outcomes_puf16 <- mutate_all(impute_shd(preimpute_outcomes_puf16,
-                                  . ~ .),function(x) as.numeric(x))
-pred_puf17 <- mutate_all(impute_shd(preimpute_pred_puf17,
-                                  . ~ .),function(x) as.numeric(x))
-outcomes_puf17 <- mutate_all(impute_shd(preimpute_outcomes_puf17,
-                                      . ~ .),function(x) as.numeric(x))
-pred_puf18 <- mutate_all(impute_shd(preimpute_pred_puf18,
-                                  . ~ .),function(x) as.numeric(x))
-outcomes_puf18 <- mutate_all(impute_shd(preimpute_outcomes_puf18,
-                                      . ~ .),function(x) as.numeric(x))
+pred_puf16 <- impute_shd(preimpute_pred_puf16, . ~ .)
+pred_puf17 <- impute_shd(preimpute_pred_puf17, . ~ .)
+pred_puf18 <- impute_shd(preimpute_pred_puf18, . ~ .)
 
 
 save(pred_puf16, file = paste0("./data/", "pred_puf16.Rda"))
-save(outcomes_puf16, file = paste0("./data/", "outcomes_puf16.Rda"))
 save(pred_puf17, file = paste0("./data/", "pred_puf17.Rda"))
-save(outcomes_puf17, file = paste0("./data/", "outcomes_puf17.Rda"))
 save(pred_puf18, file = paste0("./data/", "pred_puf18.Rda"))
-save(outcomes_puf18, file = paste0("./data/", "outcomes_puf18.Rda"))
